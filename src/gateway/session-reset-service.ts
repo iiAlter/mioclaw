@@ -12,7 +12,15 @@ import {
   type SessionEntry,
   updateSessionStore,
 } from "../config/sessions.js";
-import { unbindThreadBindingsBySessionKey } from "../discord/monitor/thread-bindings.js";
+// Stub for removed Discord channel
+function unbindThreadBindingsBySessionKey(_params?: {
+  targetSessionKey: string;
+  targetKind: string;
+  reason?: string;
+  sendFarewell?: boolean;
+}): void {
+  return;
+}
 import { logVerbose } from "../globals.js";
 import { createInternalHookEvent, triggerInternalHook } from "../hooks/internal-hooks.js";
 import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";

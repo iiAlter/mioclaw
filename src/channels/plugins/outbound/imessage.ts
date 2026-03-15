@@ -1,30 +1,17 @@
-import { sendMessageIMessage } from "../../../imessage/send.js";
-import type { OutboundSendDeps } from "../../../infra/outbound/deliver.js";
-import {
-  createScopedChannelMediaMaxBytesResolver,
-  createDirectTextMediaOutbound,
-} from "./direct-text-media.js";
+// Stub for removed iMessage channel
+import type { ChannelOutboundAdapter } from "../types.js";
+export type { ChannelMessageActionAdapter } from "../types.js";
 
-function resolveIMessageSender(deps: OutboundSendDeps | undefined) {
-  return deps?.sendIMessage ?? sendMessageIMessage;
+export function iMessageOutboundAdapter(): null {
+  return null;
 }
 
-export const imessageOutbound = createDirectTextMediaOutbound({
-  channel: "imessage",
-  resolveSender: resolveIMessageSender,
-  resolveMaxBytes: createScopedChannelMediaMaxBytesResolver("imessage"),
-  buildTextOptions: ({ cfg, maxBytes, accountId, replyToId }) => ({
-    config: cfg,
-    maxBytes,
-    accountId: accountId ?? undefined,
-    replyToId: replyToId ?? undefined,
+export const imessageOutbound: ChannelOutboundAdapter = {
+  deliveryMode: "direct",
+  sendPayload: async () => ({
+    ok: false,
+    error: "iMessage channel removed",
+    channel: "none",
+    messageId: "",
   }),
-  buildMediaOptions: ({ cfg, mediaUrl, maxBytes, accountId, replyToId, mediaLocalRoots }) => ({
-    config: cfg,
-    mediaUrl,
-    maxBytes,
-    accountId: accountId ?? undefined,
-    replyToId: replyToId ?? undefined,
-    mediaLocalRoots,
-  }),
-});
+};

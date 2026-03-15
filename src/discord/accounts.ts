@@ -1,89 +1,33 @@
-import { createAccountActionGate } from "../channels/plugins/account-action-gate.js";
-import { createAccountListHelpers } from "../channels/plugins/account-helpers.js";
+// Stub for removed Discord channel
 import type { OpenClawConfig } from "../config/config.js";
-import type { DiscordAccountConfig, DiscordActionConfig } from "../config/types.js";
-import { resolveAccountEntry } from "../routing/account-lookup.js";
-import { normalizeAccountId } from "../routing/session-key.js";
-import { resolveDiscordToken } from "./token.js";
 
-export type ResolvedDiscordAccount = {
+export type DiscordAccount = {
   accountId: string;
-  enabled: boolean;
-  name?: string;
-  token: string;
-  tokenSource: "env" | "config" | "none";
-  config: DiscordAccountConfig;
+  token?: string;
 };
 
-const { listAccountIds, resolveDefaultAccountId } = createAccountListHelpers("discord");
-export const listDiscordAccountIds = listAccountIds;
-export const resolveDefaultDiscordAccountId = resolveDefaultAccountId;
+export type ResolvedDiscordAccount = DiscordAccount;
 
-export function resolveDiscordAccountConfig(
-  cfg: OpenClawConfig,
-  accountId: string,
-): DiscordAccountConfig | undefined {
-  return resolveAccountEntry(cfg.channels?.discord?.accounts, accountId);
+export function listDiscordAccountIds(_cfg: OpenClawConfig): string[] {
+  return [];
 }
 
-export function mergeDiscordAccountConfig(
-  cfg: OpenClawConfig,
-  accountId: string,
-): DiscordAccountConfig {
-  const { accounts: _ignored, ...base } = (cfg.channels?.discord ?? {}) as DiscordAccountConfig & {
-    accounts?: unknown;
-  };
-  const account = resolveDiscordAccountConfig(cfg, accountId) ?? {};
-  return { ...base, ...account };
+export function resolveDefaultDiscordAccountId(_cfg: OpenClawConfig): string | null {
+  return null;
 }
 
-export function createDiscordActionGate(params: {
+export function resolveDiscordAccount(_params: {
   cfg: OpenClawConfig;
-  accountId?: string | null;
-}): (key: keyof DiscordActionConfig, defaultValue?: boolean) => boolean {
-  const accountId = normalizeAccountId(params.accountId);
-  return createAccountActionGate({
-    baseActions: params.cfg.channels?.discord?.actions,
-    accountActions: resolveDiscordAccountConfig(params.cfg, accountId)?.actions,
-  });
+  accountId?: string;
+}): DiscordAccount {
+  return { accountId: "" };
 }
 
-export function resolveDiscordAccount(params: {
+export function inspectDiscordAccount(_params: {
   cfg: OpenClawConfig;
-  accountId?: string | null;
-}): ResolvedDiscordAccount {
-  const accountId = normalizeAccountId(params.accountId);
-  const baseEnabled = params.cfg.channels?.discord?.enabled !== false;
-  const merged = mergeDiscordAccountConfig(params.cfg, accountId);
-  const accountEnabled = merged.enabled !== false;
-  const enabled = baseEnabled && accountEnabled;
-  const tokenResolution = resolveDiscordToken(params.cfg, { accountId });
-  return {
-    accountId,
-    enabled,
-    name: merged.name?.trim() || undefined,
-    token: tokenResolution.token,
-    tokenSource: tokenResolution.source,
-    config: merged,
-  };
+  accountId?: string;
+}): Record<string, unknown> {
+  return {};
 }
 
-export function resolveDiscordMaxLinesPerMessage(params: {
-  cfg: OpenClawConfig;
-  discordConfig?: DiscordAccountConfig | null;
-  accountId?: string | null;
-}): number | undefined {
-  if (typeof params.discordConfig?.maxLinesPerMessage === "number") {
-    return params.discordConfig.maxLinesPerMessage;
-  }
-  return resolveDiscordAccount({
-    cfg: params.cfg,
-    accountId: params.accountId,
-  }).config.maxLinesPerMessage;
-}
-
-export function listEnabledDiscordAccounts(cfg: OpenClawConfig): ResolvedDiscordAccount[] {
-  return listDiscordAccountIds(cfg)
-    .map((accountId) => resolveDiscordAccount({ cfg, accountId }))
-    .filter((account) => account.enabled);
-}
+export type InspectedDiscordAccount = Record<string, unknown>;

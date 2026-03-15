@@ -17,7 +17,6 @@ import {
 import { resolveSlackAccount } from "../../slack/accounts.js";
 import { createSlackWebClient } from "../../slack/client.js";
 import { normalizeAllowListLower } from "../../slack/monitor/allow-list.js";
-import { parseSlackTarget } from "../../slack/targets.js";
 import { buildTelegramGroupPeerId } from "../../telegram/bot/helpers.js";
 import { resolveTelegramTargetChatType } from "../../telegram/inline-buttons.js";
 import { parseTelegramThreadId } from "../../telegram/outbound-params.js";
@@ -119,7 +118,8 @@ function buildBaseSessionKey(params: {
 }
 
 // Best-effort mpim detection: allowlist/config, then Slack API (if token available).
-async function resolveSlackChannelType(params: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function _resolveSlackChannelType(params: {
   cfg: OpenClawConfig;
   accountId?: string | null;
   channelId: string;
@@ -170,8 +170,8 @@ async function resolveSlackChannelType(params: {
 
   try {
     const client = createSlackWebClient(token);
-    const info = await client.conversations.info({ channel: channelId });
-    const channel = info.channel as { is_im?: boolean; is_mpim?: boolean } | undefined;
+    const info = await client.conversations?.info({ channel: channelId });
+    const channel = info?.channel as { is_im?: boolean; is_mpim?: boolean } | undefined;
     const type = channel?.is_im ? "dm" : channel?.is_mpim ? "group" : "channel";
     SLACK_CHANNEL_TYPE_CACHE.set(`${account.accountId}:${channelId}`, type);
     return type;
@@ -181,62 +181,16 @@ async function resolveSlackChannelType(params: {
   }
 }
 
-async function resolveSlackSession(
-  params: ResolveOutboundSessionRouteParams,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function _resolveSlackSession(
+  _params: ResolveOutboundSessionRouteParams,
 ): Promise<OutboundSessionRoute | null> {
-  const parsed = parseSlackTarget(params.target, { defaultKind: "channel" });
-  if (!parsed) {
-    return null;
-  }
-  const isDm = parsed.kind === "user";
-  let peerKind: ChatType = isDm ? "direct" : "channel";
-  if (!isDm && /^G/i.test(parsed.id)) {
-    // Slack mpim/group DMs share the G-prefix; detect to align session keys with inbound.
-    const channelType = await resolveSlackChannelType({
-      cfg: params.cfg,
-      accountId: params.accountId,
-      channelId: parsed.id,
-    });
-    if (channelType === "group") {
-      peerKind = "group";
-    }
-    if (channelType === "dm") {
-      peerKind = "direct";
-    }
-  }
-  const peer: RoutePeer = {
-    kind: peerKind,
-    id: parsed.id,
-  };
-  const baseSessionKey = buildBaseSessionKey({
-    cfg: params.cfg,
-    agentId: params.agentId,
-    channel: "slack",
-    accountId: params.accountId,
-    peer,
-  });
-  const threadId = normalizeThreadId(params.threadId ?? params.replyToId);
-  const threadKeys = resolveThreadSessionKeys({
-    baseSessionKey,
-    threadId,
-  });
-  return {
-    sessionKey: threadKeys.sessionKey,
-    baseSessionKey,
-    peer,
-    chatType: peerKind === "direct" ? "direct" : "channel",
-    from:
-      peerKind === "direct"
-        ? `slack:${parsed.id}`
-        : peerKind === "group"
-          ? `slack:group:${parsed.id}`
-          : `slack:channel:${parsed.id}`,
-    to: peerKind === "direct" ? `user:${parsed.id}` : `channel:${parsed.id}`,
-    threadId,
-  };
+  // Slack channel removed
+  return null;
 }
 
-function resolveDiscordSession(
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _resolveDiscordSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
   const parsed = parseDiscordTarget(params.target, {
@@ -350,7 +304,8 @@ function resolveTelegramSession(
   };
 }
 
-function resolveWhatsAppSession(
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _resolveWhatsAppSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
   const normalized = normalizeWhatsAppTarget(params.target);
@@ -379,6 +334,7 @@ function resolveWhatsAppSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveSignalSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -424,8 +380,8 @@ function resolveSignalSession(
     sourceUuid: looksLikeUuid(uuidCandidate) ? uuidCandidate : null,
     sourceNumber: looksLikeUuid(uuidCandidate) ? null : recipient,
   });
-  const peerId = sender ? resolveSignalPeerId(sender) : recipient;
-  const displayRecipient = sender ? resolveSignalRecipient(sender) : recipient;
+  const peerId = sender ? (resolveSignalPeerId(sender) ?? recipient) : recipient;
+  const displayRecipient = sender ? (resolveSignalRecipient(sender) ?? recipient) : recipient;
   const peer: RoutePeer = { kind: "direct", id: peerId };
   const baseSessionKey = buildBaseSessionKey({
     cfg: params.cfg,
@@ -444,6 +400,7 @@ function resolveSignalSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveIMessageSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -504,6 +461,7 @@ function resolveIMessageSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveMatrixSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -532,6 +490,7 @@ function resolveMatrixSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveMSTeamsSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -574,6 +533,7 @@ function resolveMSTeamsSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveMattermostSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -620,6 +580,7 @@ function resolveMattermostSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveBlueBubblesSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -661,6 +622,7 @@ function resolveBlueBubblesSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveNextcloudTalkSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -691,12 +653,14 @@ function resolveNextcloudTalkSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveZaloSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
   return resolveZaloLikeSession(params, "zalo", /^(zl):/i);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveZaloLikeSession(
   params: ResolveOutboundSessionRouteParams,
   channel: "zalo" | "zalouser",
@@ -726,6 +690,7 @@ function resolveZaloLikeSession(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveZalouserSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -733,6 +698,7 @@ function resolveZalouserSession(
   return resolveZaloLikeSession(params, "zalouser", /^(zlu):/i);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveNostrSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -766,6 +732,7 @@ function normalizeTlonShip(raw: string): string {
   return trimmed.startsWith("~") ? trimmed : `~${trimmed}`;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function resolveTlonSession(
   params: ResolveOutboundSessionRouteParams,
 ): OutboundSessionRoute | null {
@@ -926,21 +893,8 @@ type OutboundSessionResolver = (
 ) => OutboundSessionRoute | null | Promise<OutboundSessionRoute | null>;
 
 const OUTBOUND_SESSION_RESOLVERS: Partial<Record<ChannelId, OutboundSessionResolver>> = {
-  slack: resolveSlackSession,
-  discord: resolveDiscordSession,
+  // Removed channels: slack, discord, whatsapp, signal, imessage, matrix, msteams, mattermost, bluebubbles, nextcloud-talk, zalo, zalouser, nostr, tlon
   telegram: resolveTelegramSession,
-  whatsapp: resolveWhatsAppSession,
-  signal: resolveSignalSession,
-  imessage: resolveIMessageSession,
-  matrix: resolveMatrixSession,
-  msteams: resolveMSTeamsSession,
-  mattermost: resolveMattermostSession,
-  bluebubbles: resolveBlueBubblesSession,
-  "nextcloud-talk": resolveNextcloudTalkSession,
-  zalo: resolveZaloSession,
-  zalouser: resolveZalouserSession,
-  nostr: resolveNostrSession,
-  tlon: resolveTlonSession,
   feishu: resolveFeishuSession,
 };
 

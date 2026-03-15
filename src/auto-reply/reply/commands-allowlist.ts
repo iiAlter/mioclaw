@@ -14,9 +14,6 @@ import {
   validateConfigObjectWithPlugins,
   writeConfigFile,
 } from "../../config/config.js";
-import { resolveDiscordAccount } from "../../discord/accounts.js";
-import { resolveDiscordUserAllowlist } from "../../discord/resolve-users.js";
-import { resolveIMessageAccount } from "../../imessage/accounts.js";
 import { isBlockedObjectKey } from "../../infra/prototype-keys.js";
 import {
   addChannelAllowFromStoreEntry,
@@ -29,11 +26,56 @@ import {
   normalizeOptionalAccountId,
 } from "../../routing/session-key.js";
 import { normalizeStringEntries } from "../../shared/string-normalization.js";
-import { resolveSignalAccount } from "../../signal/accounts.js";
-import { resolveSlackAccount } from "../../slack/accounts.js";
-import { resolveSlackUserAllowlist } from "../../slack/resolve-users.js";
 import { resolveTelegramAccount } from "../../telegram/accounts.js";
 import { resolveWhatsAppAccount } from "../../web/accounts.js";
+// Stub for removed Discord/Slack/Signal/iMessage channels
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveSlackAccount(_params: { cfg: OpenClawConfig; accountId?: string }): any {
+  return {
+    accountId: "",
+    config: { allowFrom: [] as string[], dm: { allowFrom: [] as string[] }, groupPolicy: {} },
+    users: { "*": {} } as Record<string, Record<string, unknown>>,
+    channels: { "*": { users: [] } } as Record<string, { users?: string[] }>,
+    userToken: "" as string | undefined,
+    botToken: "" as string | undefined,
+  };
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveDiscordAccount(_params: { cfg: OpenClawConfig; accountId?: string }): any {
+  return {
+    accountId: "",
+    config: {
+      allowFrom: [] as string[],
+      dm: { allowFrom: [] as string[] },
+      groupPolicy: {},
+      guilds: {
+        "*": { users: [] as string[], channels: {} as Record<string, { users?: string[] }> },
+      },
+    },
+    users: { "*": {} } as Record<string, Record<string, unknown>>,
+    channels: { "*": {} } as Record<string, unknown>,
+    token: "" as string | undefined,
+    allowFrom: [] as string[],
+    dm: {},
+    groupPolicy: {},
+  };
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveSignalAccount(_params: { cfg: OpenClawConfig; accountId?: string }): any {
+  return { accountId: "", config: {} };
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveIMessageAccount(_params: { cfg: OpenClawConfig; accountId?: string }): any {
+  return { accountId: "", config: {} };
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveSlackUserAllowlist(_params: { token: string; entries: string[] }): any {
+  return [];
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveDiscordUserAllowlist(_params: { token: string; entries: string[] }): any {
+  return [];
+}
 import { rejectUnauthorizedCommand, requireCommandFlagEnabled } from "./command-gates.js";
 import type { CommandHandler } from "./commands-types.js";
 
@@ -370,9 +412,13 @@ async function resolveSlackNames(params: {
   cfg: OpenClawConfig;
   accountId?: string | null;
   entries: string[];
-}) {
-  const account = resolveSlackAccount({ cfg: params.cfg, accountId: params.accountId });
-  const token = account.userToken || account.botToken?.trim();
+}): Promise<Map<string, string>> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const account: any = resolveSlackAccount({
+    cfg: params.cfg,
+    accountId: params.accountId ?? undefined,
+  });
+  const token = ((account.userToken ?? "") || (account.botToken ?? "") || "").trim();
   if (!token) {
     return new Map<string, string>();
   }
@@ -384,9 +430,13 @@ async function resolveDiscordNames(params: {
   cfg: OpenClawConfig;
   accountId?: string | null;
   entries: string[];
-}) {
-  const account = resolveDiscordAccount({ cfg: params.cfg, accountId: params.accountId });
-  const token = account.token?.trim();
+}): Promise<Map<string, string>> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const account: any = resolveDiscordAccount({
+    cfg: params.cfg,
+    accountId: params.accountId ?? undefined,
+  });
+  const token = ((account.token ?? "") || "").trim();
   if (!token) {
     return new Map<string, string>();
   }
@@ -474,29 +524,39 @@ export const handleAllowlistCommand: CommandHandler = async (params, allowTextCo
       const account = resolveIMessageAccount({ cfg: params.cfg, accountId });
       ({ dmAllowFrom, groupAllowFrom, dmPolicy, groupPolicy } = extractConfigAllowlist(account));
     } else if (channelId === "slack") {
-      const account = resolveSlackAccount({ cfg: params.cfg, accountId });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account: any = resolveSlackAccount({ cfg: params.cfg, accountId });
       dmAllowFrom = (account.config.allowFrom ?? account.config.dm?.allowFrom ?? []).map(String);
       groupPolicy = account.groupPolicy;
       const channels = account.channels ?? {};
       groupOverrides = Object.entries(channels)
-        .map(([key, value]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map(([key, value]: [string, any]) => {
           const entries = (value?.users ?? []).map(String).filter(Boolean);
           return entries.length > 0 ? { label: key, entries } : null;
         })
         .filter(Boolean) as Array<{ label: string; entries: string[] }>;
     } else if (channelId === "discord") {
-      const account = resolveDiscordAccount({ cfg: params.cfg, accountId });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account: any = resolveDiscordAccount({ cfg: params.cfg, accountId });
       dmAllowFrom = (account.config.allowFrom ?? account.config.dm?.allowFrom ?? []).map(String);
       groupPolicy = account.config.groupPolicy;
-      const guilds = account.config.guilds ?? {};
+      const guilds = (account.config.guilds ?? {}) as Record<
+        string,
+        { users?: string[]; channels?: Record<string, { users?: string[] }> }
+      >;
       for (const [guildKey, guildCfg] of Object.entries(guilds)) {
-        const entries = (guildCfg?.users ?? []).map(String).filter(Boolean);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const entries = ((guildCfg as any)?.users ?? []).map(String).filter(Boolean);
         if (entries.length > 0) {
           groupOverrides.push({ label: `guild ${guildKey}`, entries });
         }
-        const channels = guildCfg?.channels ?? {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const channels = (guildCfg as any)?.channels ?? {};
         for (const [channelKey, channelCfg] of Object.entries(channels)) {
-          const channelEntries = (channelCfg?.users ?? []).map(String).filter(Boolean);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const channelEntries = ((channelCfg as any)?.users ?? []).map(String).filter(Boolean);
           if (channelEntries.length > 0) {
             groupOverrides.push({
               label: `guild ${guildKey} / channel ${channelKey}`,

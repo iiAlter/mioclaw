@@ -1,7 +1,6 @@
-import {
-  DISCORD_DEFAULT_INBOUND_WORKER_TIMEOUT_MS,
-  DISCORD_DEFAULT_LISTENER_TIMEOUT_MS,
-} from "../discord/monitor/timeouts.js";
+// Stub for removed Discord channel
+const DISCORD_DEFAULT_INBOUND_WORKER_TIMEOUT_MS = 300000;
+const DISCORD_DEFAULT_LISTENER_TIMEOUT_MS = 300000;
 import { MEDIA_AUDIO_FIELD_HELP } from "./media-audio-field-metadata.js";
 import { IRC_FIELD_HELP } from "./schema.irc.js";
 import { describeTalkSilenceTimeoutDefaults } from "./talk-defaults.js";

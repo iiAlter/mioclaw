@@ -7,7 +7,6 @@ import {
 } from "../../auto-reply/heartbeat.js";
 import { getReplyFromConfig } from "../../auto-reply/reply.js";
 import { HEARTBEAT_TOKEN } from "../../auto-reply/tokens.js";
-import { resolveWhatsAppHeartbeatRecipients } from "../../channels/plugins/whatsapp-heartbeat.js";
 import { loadConfig } from "../../config/config.js";
 import {
   loadSessionStore,
@@ -307,11 +306,4 @@ export async function runWebHeartbeatOnce(opts: {
     });
     throw err;
   }
-}
-
-export function resolveHeartbeatRecipients(
-  cfg: ReturnType<typeof loadConfig>,
-  opts: { to?: string; all?: boolean } = {},
-) {
-  return resolveWhatsAppHeartbeatRecipients(cfg, opts);
 }

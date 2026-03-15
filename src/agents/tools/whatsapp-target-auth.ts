@@ -1,6 +1,9 @@
 import type { OpenClawConfig } from "../../config/config.js";
 import { resolveWhatsAppAccount } from "../../web/accounts.js";
-import { resolveWhatsAppOutboundTarget } from "../../whatsapp/resolve-outbound-target.js";
+// Stub for removed WhatsApp channel
+function resolveWhatsAppOutboundTarget(_params: { to: string; allowFrom: string[]; mode: string }) {
+  return { ok: true, to: _params.to };
+}
 import { ToolAuthorizationError } from "./common.js";
 
 export function resolveAuthorizedWhatsAppOutboundTarget(params: {

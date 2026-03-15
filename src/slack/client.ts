@@ -1,4 +1,20 @@
-import { type RetryOptions, type WebClientOptions, WebClient } from "@slack/web-api";
+// Stub for removed Slack channel
+export interface WebClient {
+  conversations?: {
+    list(params?: unknown): Promise<{ channels?: unknown[] }>;
+    info(params?: unknown): Promise<{ channel?: { is_im?: boolean; is_mpim?: boolean } }>;
+  };
+}
+export interface WebClientOptions {
+  retryConfig?: RetryOptions;
+}
+export interface RetryOptions {
+  retries?: number;
+  factor?: number;
+  minTimeout?: number;
+  maxTimeout?: number;
+  randomize?: boolean;
+}
 
 export const SLACK_DEFAULT_RETRY_OPTIONS: RetryOptions = {
   retries: 2,
@@ -15,6 +31,6 @@ export function resolveSlackWebClientOptions(options: WebClientOptions = {}): We
   };
 }
 
-export function createSlackWebClient(token: string, options: WebClientOptions = {}) {
-  return new WebClient(token, resolveSlackWebClientOptions(options));
+export function createSlackWebClient(_token: string, _options: WebClientOptions = {}): WebClient {
+  return { conversations: {} } as WebClient;
 }

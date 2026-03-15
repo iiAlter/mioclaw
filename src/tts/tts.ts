@@ -24,7 +24,15 @@ import type {
 } from "../config/types.tts.js";
 import { logVerbose } from "../globals.js";
 import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
-import { stripMarkdown } from "../line/markdown-to-line.js";
+function stripMarkdownForTts(text: string): string {
+  return text
+    .replace(/^#{1,6}\s+/gm, "") // headings
+    .replace(/\*\*([^*]+)\*\*/g, "$1") // bold
+    .replace(/\*([^*]+)\*/g, "$1") // italic
+    .replace(/`([^`]+)`/g, "$1") // inline code
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // links
+    .trim();
+}
 import { isVoiceCompatibleAudio } from "../media/audio.js";
 import { CONFIG_DIR, resolveUserPath } from "../utils.js";
 import {
@@ -916,7 +924,7 @@ export async function maybeApplyTtsToPayload(params: {
     }
   }
 
-  textForAudio = stripMarkdown(textForAudio).trim(); // strip markdown for TTS (### → "hashtag" etc.)
+  textForAudio = stripMarkdownForTts(textForAudio);
   if (textForAudio.length < 10) {
     return nextPayload;
   }

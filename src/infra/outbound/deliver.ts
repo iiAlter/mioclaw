@@ -17,7 +17,28 @@ import {
   appendAssistantMessageToSessionTranscript,
   resolveMirroredTranscriptText,
 } from "../../config/sessions.js";
-import type { sendMessageDiscord } from "../../discord/send.js";
+// Stub types for removed channels (Discord, Slack, iMessage, Signal)
+type StubSendFunction = (
+  to: string,
+  text: string,
+  opts?: unknown,
+) => Promise<{ messageId: string }>;
+const _stubDiscordSend: StubSendFunction = null as never;
+const _stubSlackSend: StubSendFunction = null as never;
+const _stubIMessageSend: StubSendFunction = null as never;
+const _stubSignalSend: StubSendFunction = null as never;
+const sendMessageSignal = _stubSignalSend;
+
+// Stub for Signal-specific types
+type SignalTextStyleRange = { start: number; end: number; style: string };
+function markdownToSignalTextChunks(
+  _text: string,
+  _limit: number,
+  _opts?: unknown,
+): { text: string; styles: SignalTextStyleRange[] }[] {
+  return [{ text: "", styles: [] }];
+}
+
 import { fireAndForgetHook } from "../../hooks/fire-and-forget.js";
 import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
 import {
@@ -26,13 +47,9 @@ import {
   toPluginMessageContext,
   toPluginMessageSentEvent,
 } from "../../hooks/message-hook-mappers.js";
-import type { sendMessageIMessage } from "../../imessage/send.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { getAgentScopedMediaLocalRoots } from "../../media/local-roots.js";
 import { getGlobalHookRunner } from "../../plugins/hook-runner-global.js";
-import { markdownToSignalTextChunks, type SignalTextStyleRange } from "../../signal/format.js";
-import { sendMessageSignal } from "../../signal/send.js";
-import type { sendMessageSlack } from "../../slack/send.js";
 import type { sendMessageTelegram } from "../../telegram/send.js";
 import type { sendMessageWhatsApp } from "../../web/outbound.js";
 import { throwIfAborted } from "./abort.js";
@@ -66,10 +83,11 @@ type SendMatrixMessage = (
 export type OutboundSendDeps = {
   sendWhatsApp?: typeof sendMessageWhatsApp;
   sendTelegram?: typeof sendMessageTelegram;
-  sendDiscord?: typeof sendMessageDiscord;
-  sendSlack?: typeof sendMessageSlack;
-  sendSignal?: typeof sendMessageSignal;
-  sendIMessage?: typeof sendMessageIMessage;
+  // Removed channels: Discord, Slack, iMessage, Signal (migrated to plugins)
+  sendDiscord?: StubSendFunction;
+  sendSlack?: StubSendFunction;
+  sendIMessage?: StubSendFunction;
+  sendSignal?: StubSendFunction;
   sendMatrix?: SendMatrixMessage;
   sendMSTeams?: (
     to: string,

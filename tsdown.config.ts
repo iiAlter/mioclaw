@@ -45,12 +45,6 @@ const pluginSdkEntrypoints = [
   "core",
   "compat",
   "telegram",
-  "discord",
-  "slack",
-  "signal",
-  "imessage",
-  "whatsapp",
-  "line",
   "msteams",
   "acpx",
   "bluebubbles",
@@ -60,8 +54,6 @@ const pluginSdkEntrypoints = [
   "diffs",
   "feishu",
   "google-gemini-cli-auth",
-  "googlechat",
-  "irc",
   "llm-task",
   "lobster",
   "matrix",
@@ -72,7 +64,6 @@ const pluginSdkEntrypoints = [
   "nextcloud-talk",
   "nostr",
   "open-prose",
-  "phone-control",
   "qwen-portal-auth",
   "synology-chat",
   "talk-voice",
@@ -104,16 +95,9 @@ export default defineConfig([
   nodeBuildConfig({
     // Keep sync lazy-runtime channel modules as concrete dist files.
     entry: {
-      "channels/plugins/agent-tools/whatsapp-login":
-        "src/channels/plugins/agent-tools/whatsapp-login.ts",
-      "channels/plugins/actions/discord": "src/channels/plugins/actions/discord.ts",
-      "channels/plugins/actions/signal": "src/channels/plugins/actions/signal.ts",
       "channels/plugins/actions/telegram": "src/channels/plugins/actions/telegram.ts",
       "telegram/audit": "src/telegram/audit.ts",
       "telegram/token": "src/telegram/token.ts",
-      "line/accounts": "src/line/accounts.ts",
-      "line/send": "src/line/send.ts",
-      "line/template-messages": "src/line/template-messages.ts",
     },
   }),
   ...pluginSdkEntrypoints.map((entry) =>

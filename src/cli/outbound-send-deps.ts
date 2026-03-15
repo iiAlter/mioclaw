@@ -4,8 +4,16 @@ import {
   type CliOutboundSendSource,
 } from "./outbound-send-mapping.js";
 
-export type CliDeps = Required<CliOutboundSendSource>;
+// Removed channels don't need to be required
+export type CliDeps = {
+  sendMessageWhatsApp: CliOutboundSendSource["sendMessageWhatsApp"];
+  sendMessageTelegram: CliOutboundSendSource["sendMessageTelegram"];
+  sendMessageDiscord?: CliOutboundSendSource["sendMessageDiscord"];
+  sendMessageSlack?: CliOutboundSendSource["sendMessageSlack"];
+  sendMessageSignal?: CliOutboundSendSource["sendMessageSignal"];
+  sendMessageIMessage?: CliOutboundSendSource["sendMessageIMessage"];
+};
 
 export function createOutboundSendDeps(deps: CliDeps): OutboundSendDeps {
-  return createOutboundSendDepsFromCliSource(deps);
+  return createOutboundSendDepsFromCliSource(deps as CliOutboundSendSource);
 }

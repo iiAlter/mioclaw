@@ -1,4 +1,10 @@
-import type { DiscordPluralKitConfig } from "../discord/pluralkit.js";
+// Stub for removed Discord channel
+export type DiscordPluralKitConfig = {
+  /** Enable PluralKit integration */
+  enabled?: boolean;
+  token?: string;
+};
+
 import type {
   BlockStreamingChunkConfig,
   BlockStreamingCoalesceConfig,

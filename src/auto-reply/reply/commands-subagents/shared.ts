@@ -16,7 +16,11 @@ import type {
   loadSessionStore as loadSessionStoreFn,
   resolveStorePath as resolveStorePathFn,
 } from "../../../config/sessions.js";
-import { parseDiscordTarget } from "../../../discord/targets.js";
+// Stub for removed channel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseDiscordTarget(_target?: string, _opts?: unknown): any {
+  return null;
+}
 import { callGateway } from "../../../gateway/call.js";
 import { formatTimeAgo } from "../../../infra/format-time/format-relative.ts";
 import { parseAgentSessionKey } from "../../../routing/session-key.js";

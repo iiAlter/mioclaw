@@ -1,5 +1,8 @@
-import { createWhatsAppLoginTool } from "../../channels/plugins/agent-tools/whatsapp-login.js";
 import { getActiveWebListener } from "../../web/active-listener.js";
+// Stub for removed WhatsApp channel
+function createWhatsAppLoginTool() {
+  return null;
+}
 import {
   getWebAuthAgeMs,
   logoutWeb,

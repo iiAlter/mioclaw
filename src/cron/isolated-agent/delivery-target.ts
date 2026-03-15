@@ -16,7 +16,15 @@ import { readChannelAllowFromStoreSync } from "../../pairing/pairing-store.js";
 import { buildChannelAccountBindings } from "../../routing/bindings.js";
 import { normalizeAccountId, normalizeAgentId } from "../../routing/session-key.js";
 import { resolveWhatsAppAccount } from "../../web/accounts.js";
-import { normalizeWhatsAppTarget } from "../../whatsapp/normalize.js";
+// Stub for removed WhatsApp channel - returns string to match original behavior
+function normalizeWhatsAppTarget(_params: { to: string; allowFrom?: string[] }): string;
+function normalizeWhatsAppTarget(to: string): string;
+function normalizeWhatsAppTarget(
+  toOrParams: string | { to: string; allowFrom?: string[] },
+): string {
+  const to = typeof toOrParams === "string" ? toOrParams : toOrParams.to;
+  return to;
+}
 
 export type DeliveryTargetResolution =
   | {

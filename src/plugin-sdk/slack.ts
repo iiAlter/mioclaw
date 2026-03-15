@@ -1,14 +1,9 @@
-export type { OpenClawConfig } from "../config/config.js";
-export type { InspectedSlackAccount } from "../slack/account-inspect.js";
-export type { ResolvedSlackAccount } from "../slack/accounts.js";
+// Slack plugin SDK - stub exports for migrated channel
+// The Slack channel has been migrated to a plugin
+
+import type { OpenClawConfig } from "../config/config.js";
+export type { OpenClawConfig };
 export * from "./channel-plugin-common.js";
-export {
-  listSlackAccountIds,
-  resolveDefaultSlackAccountId,
-  resolveSlackAccount,
-  resolveSlackReplyToMode,
-} from "../slack/accounts.js";
-export { inspectSlackAccount } from "../slack/account-inspect.js";
 export {
   projectCredentialSnapshotFields,
   resolveConfiguredFromCredentialStatuses,
@@ -22,8 +17,6 @@ export {
   looksLikeSlackTargetId,
   normalizeSlackMessagingTarget,
 } from "../channels/plugins/normalize/slack.js";
-export { extractSlackToolSend, listSlackMessageActions } from "../slack/message-actions.js";
-export { buildSlackThreadingToolContext } from "../slack/threading-tool-context.js";
 export { buildComputedAccountStatusSnapshot } from "./status-helpers.js";
 
 export {
@@ -34,7 +27,28 @@ export {
   resolveSlackGroupRequireMention,
   resolveSlackGroupToolPolicy,
 } from "../channels/plugins/group-mentions.js";
-export { slackOnboardingAdapter } from "../channels/plugins/onboarding/slack.js";
 export { SlackConfigSchema } from "../config/zod-schema.providers-core.js";
 
-export { handleSlackMessageAction } from "./slack-message-actions.js";
+export interface SlackAccount {
+  accountId: string;
+  botToken?: string;
+  userToken?: string;
+}
+
+export function resolveSlackAccount(_params: {
+  cfg: OpenClawConfig;
+  accountId?: string;
+}): SlackAccount {
+  return { accountId: "" };
+}
+
+export function inspectSlackAccount(_params: {
+  cfg: OpenClawConfig;
+  accountId?: string;
+}): Record<string, unknown> {
+  return {};
+}
+
+export function handleSlackMessageAction(_params: Record<string, unknown>): unknown {
+  return null;
+}

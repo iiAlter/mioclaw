@@ -50,10 +50,12 @@ export {
   resolveWhatsAppMentionStripPatterns,
 } from "../channels/plugins/whatsapp-shared.js";
 export { resolveWhatsAppHeartbeatRecipients } from "../channels/plugins/whatsapp-heartbeat.js";
-export { whatsappOnboardingAdapter } from "../channels/plugins/onboarding/whatsapp.js";
 export { collectWhatsAppStatusIssues } from "../channels/plugins/status-issues/whatsapp.js";
 export { WhatsAppConfigSchema } from "../config/zod-schema.providers-whatsapp.js";
 
 export { createActionGate, readStringParam } from "../agents/tools/common.js";
 
 export { normalizeE164 } from "../utils.js";
+
+// Stub for removed WhatsApp onboarding - return null for compatibility
+export const whatsappOnboardingAdapter = null;

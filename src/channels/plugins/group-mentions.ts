@@ -4,15 +4,46 @@ import {
   resolveChannelGroupToolsPolicy,
   resolveToolsBySender,
 } from "../../config/group-policy.js";
-import type { DiscordConfig } from "../../config/types.js";
 import type {
   GroupToolPolicyBySenderConfig,
   GroupToolPolicyConfig,
 } from "../../config/types.tools.js";
-import { resolveExactLineGroupConfigKey } from "../../line/group-keys.js";
 import { normalizeAtHashSlug, normalizeHyphenSlug } from "../../shared/string-normalization.js";
-import { inspectSlackAccount } from "../../slack/account-inspect.js";
 import type { ChannelGroupContext } from "./types.js";
+
+// Stubs for removed channels (Discord, Slack, iMessage, Signal)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _DiscordConfig = {
+  guilds?: Record<
+    string,
+    {
+      slug?: string;
+      requireMention?: boolean;
+      channels?: Record<string, { requireMention?: boolean }>;
+    }
+  >;
+};
+
+function inspectSlackAccount(_params: { cfg: OpenClawConfig; accountId?: string | null }): {
+  channels?: Record<
+    string,
+    {
+      requireMention?: boolean;
+      tools?: GroupToolPolicyConfig;
+      toolsBySender?: GroupToolPolicyBySenderConfig;
+    }
+  >;
+} {
+  return { channels: {} };
+}
+
+function resolveExactLineGroupConfigKey(_params: {
+  cfg: OpenClawConfig;
+  accountId?: string | null;
+  groupId?: string | null;
+}): string | null | undefined {
+  return undefined;
+}
 
 type GroupMentionParams = ChannelGroupContext;
 
@@ -69,7 +100,8 @@ function resolveTelegramRequireMention(params: {
   return undefined;
 }
 
-function resolveDiscordGuildEntry(guilds: DiscordConfig["guilds"], groupSpace?: string | null) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveDiscordGuildEntry(guilds: any, groupSpace?: string | null): any {
   if (!guilds || Object.keys(guilds).length === 0) {
     return null;
   }
@@ -83,7 +115,8 @@ function resolveDiscordGuildEntry(guilds: DiscordConfig["guilds"], groupSpace?: 
   }
   if (normalized) {
     const match = Object.values(guilds).find(
-      (entry) => normalizeDiscordSlug(entry?.slug ?? undefined) === normalized,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (entry: any) => normalizeDiscordSlug(entry?.slug ?? undefined) === normalized,
     );
     if (match) {
       return match;
@@ -129,9 +162,8 @@ type ChannelGroupPolicyChannel =
   | "bluebubbles"
   | "line";
 
-function resolveSlackChannelPolicyEntry(
-  params: GroupMentionParams,
-): SlackChannelPolicyEntry | undefined {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveSlackChannelPolicyEntry(params: GroupMentionParams): any {
   const account = inspectSlackAccount({
     cfg: params.cfg,
     accountId: params.accountId,
@@ -208,13 +240,25 @@ function resolveSenderToolsEntry(
   return entry.tools;
 }
 
-function resolveDiscordPolicyContext(params: GroupMentionParams) {
+type DiscordPolicyEntry = {
+  requireMention?: boolean;
+  tools?: GroupToolPolicyConfig;
+  toolsBySender?: GroupToolPolicyBySenderConfig;
+  channels?: Record<string, DiscordPolicyEntry>;
+};
+
+type DiscordPolicyContext = {
+  guildEntry?: DiscordPolicyEntry | null;
+  channelEntry?: DiscordPolicyEntry | null;
+};
+
+function resolveDiscordPolicyContext(params: GroupMentionParams): DiscordPolicyContext {
   const guildEntry = resolveDiscordGuildEntry(
     params.cfg.channels?.discord?.guilds,
     params.groupSpace,
-  );
+  ) as DiscordPolicyEntry | null | undefined;
   const channelEntries = guildEntry?.channels;
-  const channelEntry =
+  const channelEntry: DiscordPolicyEntry | null | undefined =
     channelEntries && Object.keys(channelEntries).length > 0
       ? resolveDiscordChannelEntry(channelEntries, params)
       : undefined;

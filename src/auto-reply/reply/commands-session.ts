@@ -1,16 +1,43 @@
 import { resolveFastModeState } from "../../agents/fast-mode.js";
 import { parseDurationMs } from "../../cli/parse-duration.js";
 import { isRestartEnabled } from "../../config/commands.js";
-import {
-  formatThreadBindingDurationLabel,
-  getThreadBindingManager,
-  resolveThreadBindingIdleTimeoutMs,
-  resolveThreadBindingInactivityExpiresAt,
-  resolveThreadBindingMaxAgeExpiresAt,
-  resolveThreadBindingMaxAgeMs,
-  setThreadBindingIdleTimeoutBySessionKey,
-  setThreadBindingMaxAgeBySessionKey,
-} from "../../discord/monitor/thread-bindings.js";
+// Stub for removed Discord channel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function formatThreadBindingDurationLabel(_ms: number): any {
+  return "0m";
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getThreadBindingManager(_accountId: string): any {
+  return {
+    getByThreadId: (_threadId?: string) => ({ boundBy: "", metadata: {} }),
+    getIdleTimeoutMs: (_threadId?: string) => 0,
+    getMaxAgeMs: (_threadId?: string) => 0,
+  };
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveThreadBindingIdleTimeoutMs(_params?: unknown): any {
+  return 0;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveThreadBindingInactivityExpiresAt(_params?: unknown): any {
+  return null;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveThreadBindingMaxAgeExpiresAt(_params?: unknown): any {
+  return null;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function resolveThreadBindingMaxAgeMs(_params?: unknown): any {
+  return 0;
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function setThreadBindingIdleTimeoutBySessionKey(_params: unknown): any {
+  return { updated: [] };
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function setThreadBindingMaxAgeBySessionKey(_params: unknown): any {
+  return { updated: [] };
+}
 import { logVerbose } from "../../globals.js";
 import { getSessionBindingService } from "../../infra/outbound/session-binding-service.js";
 import type { SessionBindingRecord } from "../../infra/outbound/session-binding-service.js";

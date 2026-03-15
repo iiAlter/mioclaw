@@ -1,48 +1,16 @@
-export type {
-  ThreadBindingManager,
-  ThreadBindingRecord,
-  ThreadBindingTargetKind,
-} from "./thread-bindings.types.js";
+// Stub for removed Discord channel
+export function resolveDiscordThreadBindings(_params: unknown): unknown {
+  return null;
+}
 
-export {
-  formatThreadBindingDurationLabel,
-  resolveThreadBindingIntroText,
-  resolveThreadBindingThreadName,
-} from "./thread-bindings.messages.js";
-export {
-  resolveThreadBindingPersona,
-  resolveThreadBindingPersonaFromRecord,
-} from "./thread-bindings.persona.js";
+export function autoBindSpawnedDiscordSubagent(_params: unknown): unknown {
+  return null;
+}
 
-export {
-  resolveDiscordThreadBindingIdleTimeoutMs,
-  resolveDiscordThreadBindingMaxAgeMs,
-  resolveThreadBindingsEnabled,
-} from "./thread-bindings.config.js";
+export function listThreadBindingsBySessionKey(_params: unknown): unknown[] {
+  return [];
+}
 
-export {
-  isRecentlyUnboundThreadWebhookMessage,
-  resolveThreadBindingIdleTimeoutMs,
-  resolveThreadBindingInactivityExpiresAt,
-  resolveThreadBindingMaxAgeExpiresAt,
-  resolveThreadBindingMaxAgeMs,
-} from "./thread-bindings.state.js";
-
-export {
-  autoBindSpawnedDiscordSubagent,
-  listThreadBindingsBySessionKey,
-  listThreadBindingsForAccount,
-  reconcileAcpThreadBindingsOnStartup,
-  setThreadBindingIdleTimeoutBySessionKey,
-  setThreadBindingMaxAgeBySessionKey,
-  unbindThreadBindingsBySessionKey,
-} from "./thread-bindings.lifecycle.js";
-
-export type { AcpThreadBindingReconciliationResult } from "./thread-bindings.lifecycle.js";
-
-export {
-  __testing,
-  createNoopThreadBindingManager,
-  createThreadBindingManager,
-  getThreadBindingManager,
-} from "./thread-bindings.manager.js";
+export function unbindThreadBindingsBySessionKey(_params: unknown): void {
+  // no-op
+}

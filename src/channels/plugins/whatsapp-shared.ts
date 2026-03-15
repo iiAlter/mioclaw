@@ -1,17 +1,17 @@
-import { escapeRegExp } from "../../utils.js";
+// Stub for removed WhatsApp channel
+export type WhatsAppAccount = {
+  accountId: string;
+  phoneNumberId?: string;
+};
 
-export const WHATSAPP_GROUP_INTRO_HINT =
-  "WhatsApp IDs: SenderId is the participant JID (group participant id).";
-
-export function resolveWhatsAppGroupIntroHint(): string {
-  return WHATSAPP_GROUP_INTRO_HINT;
+export function resolveWhatsAppAccount(_params: unknown): WhatsAppAccount {
+  return { accountId: "" };
 }
 
-export function resolveWhatsAppMentionStripPatterns(ctx: { To?: string | null }): string[] {
-  const selfE164 = (ctx.To ?? "").replace(/^whatsapp:/, "");
-  if (!selfE164) {
-    return [];
-  }
-  const escaped = escapeRegExp(selfE164);
-  return [escaped, `@${escaped}`];
+export function resolveWhatsAppGroupIntroHint(_params: unknown): string | null {
+  return null;
+}
+
+export function resolveWhatsAppMentionStripPatterns(): RegExp[] {
+  return [];
 }

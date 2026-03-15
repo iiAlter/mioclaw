@@ -11,9 +11,14 @@ import type { OpenClawConfig } from "../../config/config.js";
 import { createRootScopedReadFile } from "../../infra/fs-safe.js";
 import { extensionForMime } from "../../media/mime.js";
 import { readBooleanParam as readBooleanParamShared } from "../../plugin-sdk/boolean-param.js";
-import { parseSlackTarget } from "../../slack/targets.js";
 import { parseTelegramTarget } from "../../telegram/targets.js";
 import { loadWebMedia } from "../../web/media.js";
+
+// Stub for removed Slack channel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseSlackTarget(_target: string, _opts?: any): any {
+  return null;
+}
 
 export const readBooleanParam = readBooleanParamShared;
 

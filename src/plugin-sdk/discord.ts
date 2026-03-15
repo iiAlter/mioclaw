@@ -1,3 +1,4 @@
+// Stub for removed Discord channel
 export type { ChannelMessageActionAdapter } from "../channels/plugins/types.js";
 export type { OpenClawConfig } from "../config/config.js";
 export type { InspectedDiscordAccount } from "../discord/account-inspect.js";
@@ -34,16 +35,20 @@ export {
   resolveDiscordGroupRequireMention,
   resolveDiscordGroupToolPolicy,
 } from "../channels/plugins/group-mentions.js";
-export { discordOnboardingAdapter } from "../channels/plugins/onboarding/discord.js";
 export { DiscordConfigSchema } from "../config/zod-schema.providers-core.js";
 
-export {
-  autoBindSpawnedDiscordSubagent,
-  listThreadBindingsBySessionKey,
-  unbindThreadBindingsBySessionKey,
-} from "../discord/monitor/thread-bindings.js";
+// Stub for removed Discord onboarding - return null for compatibility
+export const discordOnboardingAdapter = null;
 
+// Re-export from status-helpers for compatibility
 export {
   buildComputedAccountStatusSnapshot,
   buildTokenChannelStatusSummary,
 } from "./status-helpers.js";
+
+export { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
+export {
+  applyAccountNameToChannelSection,
+  migrateBaseNameToDefaultAccount,
+} from "../channels/plugins/setup-helpers.js";
+export { buildChannelConfigSchema } from "../channels/plugins/config-schema.js";

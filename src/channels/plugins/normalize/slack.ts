@@ -1,26 +1,18 @@
-import { parseSlackTarget } from "../../../slack/targets.js";
-
-export function normalizeSlackMessagingTarget(raw: string): string | undefined {
-  const target = parseSlackTarget(raw, { defaultKind: "channel" });
-  return target?.normalized;
+// Stub for removed Slack channel
+export function normalizeSlackTarget(_target: string): { kind: string; value: string } | null {
+  return null;
 }
 
-export function looksLikeSlackTargetId(raw: string): boolean {
-  const trimmed = raw.trim();
-  if (!trimmed) {
-    return false;
-  }
-  if (/^<@([A-Z0-9]+)>$/i.test(trimmed)) {
-    return true;
-  }
-  if (/^(user|channel):/i.test(trimmed)) {
-    return true;
-  }
-  if (/^slack:/i.test(trimmed)) {
-    return true;
-  }
-  if (/^[@#]/.test(trimmed)) {
-    return true;
-  }
-  return /^[CUWGD][A-Z0-9]{8,}$/i.test(trimmed);
+export function normalizeSlackChannelName(_name: string): string {
+  return "";
+}
+
+export function looksLikeSlackTargetId(_value: string): boolean {
+  return false;
+}
+
+export function normalizeSlackMessagingTarget(
+  _target: string,
+): { kind: string; value: string } | null {
+  return null;
 }

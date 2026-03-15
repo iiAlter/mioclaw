@@ -36,8 +36,9 @@ import { dispatchReplyWithBufferedBlockDispatcher } from "../../auto-reply/reply
 import { createReplyDispatcherWithTyping } from "../../auto-reply/reply/reply-dispatcher.js";
 import { removeAckReactionAfterReply, shouldAckReaction } from "../../channels/ack-reactions.js";
 import { resolveCommandAuthorizedFromAuthorizers } from "../../channels/command-gating.js";
-import { discordMessageActions } from "../../channels/plugins/actions/discord.js";
-import { signalMessageActions } from "../../channels/plugins/actions/signal.js";
+// Stub for removed channels
+const discordMessageActions = null;
+const signalMessageActions = null;
 import { telegramMessageActions } from "../../channels/plugins/actions/telegram.js";
 import { recordInboundSession } from "../../channels/session.js";
 import {
@@ -51,39 +52,7 @@ import {
   resolveStorePath,
   updateLastRoute,
 } from "../../config/sessions.js";
-import { auditDiscordChannelPermissions } from "../../discord/audit.js";
-import {
-  listDiscordDirectoryGroupsLive,
-  listDiscordDirectoryPeersLive,
-} from "../../discord/directory-live.js";
-import { monitorDiscordProvider } from "../../discord/monitor.js";
-import { probeDiscord } from "../../discord/probe.js";
-import { resolveDiscordChannelAllowlist } from "../../discord/resolve-channels.js";
-import { resolveDiscordUserAllowlist } from "../../discord/resolve-users.js";
-import { sendMessageDiscord, sendPollDiscord } from "../../discord/send.js";
-import { monitorIMessageProvider } from "../../imessage/monitor.js";
-import { probeIMessage } from "../../imessage/probe.js";
-import { sendMessageIMessage } from "../../imessage/send.js";
 import { getChannelActivity, recordChannelActivity } from "../../infra/channel-activity.js";
-import {
-  listLineAccountIds,
-  normalizeAccountId as normalizeLineAccountId,
-  resolveDefaultLineAccountId,
-  resolveLineAccount,
-} from "../../line/accounts.js";
-import { monitorLineProvider } from "../../line/monitor.js";
-import { probeLineBot } from "../../line/probe.js";
-import {
-  createQuickReplyItems,
-  pushFlexMessage,
-  pushLocationMessage,
-  pushMessageLine,
-  pushMessagesLine,
-  pushTemplateMessage,
-  pushTextMessageWithQuickReplies,
-  sendMessageLine,
-} from "../../line/send.js";
-import { buildTemplateMessageFromPayload } from "../../line/template-messages.js";
 import { convertMarkdownTables } from "../../markdown/tables.js";
 import { fetchRemoteMedia } from "../../media/fetch.js";
 import { saveMediaBuffer } from "../../media/store.js";
@@ -93,18 +62,119 @@ import {
   upsertChannelPairingRequest,
 } from "../../pairing/pairing-store.js";
 import { buildAgentSessionKey, resolveAgentRoute } from "../../routing/resolve-route.js";
-import { monitorSignalProvider } from "../../signal/index.js";
-import { probeSignal } from "../../signal/probe.js";
-import { sendMessageSignal } from "../../signal/send.js";
-import {
-  listSlackDirectoryGroupsLive,
-  listSlackDirectoryPeersLive,
-} from "../../slack/directory-live.js";
-import { monitorSlackProvider } from "../../slack/index.js";
-import { probeSlack } from "../../slack/probe.js";
-import { resolveSlackChannelAllowlist } from "../../slack/resolve-channels.js";
-import { resolveSlackUserAllowlist } from "../../slack/resolve-users.js";
-import { sendMessageSlack } from "../../slack/send.js";
+
+// Stub for removed channels
+function auditDiscordChannelPermissions() {
+  return null;
+}
+function listDiscordDirectoryGroupsLive() {
+  return [];
+}
+function listDiscordDirectoryPeersLive() {
+  return [];
+}
+function monitorDiscordProvider() {
+  return null;
+}
+function probeDiscord() {
+  return null;
+}
+function resolveDiscordChannelAllowlist() {
+  return [];
+}
+function resolveDiscordUserAllowlist() {
+  return [];
+}
+function sendMessageDiscord() {
+  return null;
+}
+function sendPollDiscord() {
+  return null;
+}
+function monitorIMessageProvider() {
+  return null;
+}
+function probeIMessage() {
+  return null;
+}
+function sendMessageIMessage() {
+  return null;
+}
+function listLineAccountIds() {
+  return [];
+}
+function normalizeLineAccountId() {
+  return "";
+}
+function resolveDefaultLineAccountId() {
+  return "";
+}
+function resolveLineAccount() {
+  return null;
+}
+function monitorLineProvider() {
+  return null;
+}
+function probeLineBot() {
+  return null;
+}
+function createQuickReplyItems() {
+  return [];
+}
+function pushFlexMessage() {
+  return null;
+}
+function pushLocationMessage() {
+  return null;
+}
+function pushMessageLine() {
+  return null;
+}
+function pushMessagesLine() {
+  return null;
+}
+function pushTemplateMessage() {
+  return null;
+}
+function pushTextMessageWithQuickReplies() {
+  return null;
+}
+function sendMessageLine() {
+  return null;
+}
+function buildTemplateMessageFromPayload() {
+  return null;
+}
+function monitorSignalProvider() {
+  return null;
+}
+function probeSignal() {
+  return null;
+}
+function sendMessageSignal() {
+  return null;
+}
+function listSlackDirectoryGroupsLive() {
+  return [];
+}
+function listSlackDirectoryPeersLive() {
+  return [];
+}
+function monitorSlackProvider() {
+  return null;
+}
+function probeSlack() {
+  return null;
+}
+function resolveSlackChannelAllowlist() {
+  return [];
+}
+function resolveSlackUserAllowlist() {
+  return [];
+}
+function sendMessageSlack() {
+  return null;
+}
 import {
   auditTelegramGroupMembership,
   collectTelegramUnmentionedGroupIds,

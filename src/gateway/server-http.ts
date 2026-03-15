@@ -14,7 +14,10 @@ import type { CanvasHostHandler } from "../canvas-host/server.js";
 import { loadConfig } from "../config/config.js";
 import type { createSubsystemLogger } from "../logging/subsystem.js";
 import { safeEqualSecret } from "../security/secret-equal.js";
-import { handleSlackHttpRequest } from "../slack/http/index.js";
+// Stub for removed Slack channel
+function handleSlackHttpRequest(_req: unknown, _res: unknown) {
+  return false;
+}
 import {
   AUTH_RATE_LIMIT_SCOPE_HOOK_AUTH,
   createAuthRateLimiter,

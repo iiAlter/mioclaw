@@ -1,3 +1,4 @@
+// Stub for removed iMessage channel
 export type { ResolvedIMessageAccount } from "../imessage/accounts.js";
 export * from "./channel-plugin-common.js";
 export {
@@ -23,8 +24,14 @@ export {
   resolveIMessageGroupRequireMention,
   resolveIMessageGroupToolPolicy,
 } from "../channels/plugins/group-mentions.js";
-export { imessageOnboardingAdapter } from "../channels/plugins/onboarding/imessage.js";
 export { IMessageConfigSchema } from "../config/zod-schema.providers-core.js";
 
-export { resolveChannelMediaMaxBytes } from "../channels/plugins/media-limits.js";
-export { collectStatusIssuesFromLastError } from "./status-helpers.js";
+// Stub for removed iMessage onboarding - return null for compatibility
+export const imessageOnboardingAdapter = null;
+
+export { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
+export {
+  applyAccountNameToChannelSection,
+  migrateBaseNameToDefaultAccount,
+} from "../channels/plugins/setup-helpers.js";
+export { buildChannelConfigSchema } from "../channels/plugins/config-schema.js";

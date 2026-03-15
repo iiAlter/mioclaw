@@ -1,6 +1,13 @@
 import { loadConfig, type OpenClawConfig } from "../config/config.js";
-import { listEnabledDiscordAccounts } from "../discord/accounts.js";
-import { isDiscordExecApprovalClientEnabled } from "../discord/exec-approvals.js";
+// Stub for removed Discord channel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function listEnabledDiscordAccounts(_cfg?: any): any[] {
+  return [];
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isDiscordExecApprovalClientEnabled(_params?: any): boolean {
+  return false;
+}
 import { listEnabledTelegramAccounts } from "../telegram/accounts.js";
 import { isTelegramExecApprovalClientEnabled } from "../telegram/exec-approvals.js";
 import { INTERNAL_MESSAGE_CHANNEL, normalizeMessageChannel } from "../utils/message-channel.js";

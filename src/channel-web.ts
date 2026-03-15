@@ -5,7 +5,6 @@ export {
   HEARTBEAT_PROMPT,
   HEARTBEAT_TOKEN,
   monitorWebChannel,
-  resolveHeartbeatRecipients,
   runWebHeartbeatOnce,
   type WebChannelStatus,
   type WebMonitorTuning,
