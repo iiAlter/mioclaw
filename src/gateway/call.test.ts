@@ -488,14 +488,14 @@ describe("buildGatewayConnectionDetails", () => {
       gateway: {
         mode: "remote",
         bind: "loopback",
-        remote: { url: "ws://openclaw-gateway.ai:18789" },
+        remote: { url: "ws://mioclaw-gateway.ai:18789" },
       },
     });
     resolveGatewayPort.mockReturnValue(18789);
 
     const details = buildGatewayConnectionDetails();
 
-    expect(details.url).toBe("ws://openclaw-gateway.ai:18789");
+    expect(details.url).toBe("ws://mioclaw-gateway.ai:18789");
     expect(details.urlSource).toBe("config gateway.remote.url");
   });
 

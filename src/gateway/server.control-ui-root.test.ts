@@ -7,7 +7,7 @@ import { installGatewayTestHooks, testState, withGatewayServer } from "./test-he
 installGatewayTestHooks({ scope: "suite" });
 
 async function withGlobalControlUiHardlinkFixture<T>(run: (rootPath: string) => Promise<T>) {
-  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-ui-hardlink-"));
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-gateway-ui-hardlink-"));
   try {
     const packageRoot = path.join(tmp, "pnpm-global", "5", "node_modules", "openclaw");
     const controlUiRoot = path.join(packageRoot, "dist", "control-ui");

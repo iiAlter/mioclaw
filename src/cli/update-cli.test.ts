@@ -316,7 +316,7 @@ describe("update-cli", () => {
     inspectPortUsage.mockResolvedValue({
       port: 18789,
       status: "busy",
-      listeners: [{ pid: 4242, command: "openclaw-gateway" }],
+      listeners: [{ pid: 4242, command: "mioclaw-gateway" }],
       hints: [],
     });
     classifyPortListener.mockReturnValue("gateway");

@@ -100,7 +100,7 @@ function isOpenClawGatewaySystemdService(name: string, contents: string): boolea
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (!name.startsWith("openclaw-gateway")) {
+  if (!name.startsWith("mioclaw-gateway")) {
     return false;
   }
   return contents.toLowerCase().includes("gateway");
@@ -112,7 +112,7 @@ function isOpenClawGatewayTaskName(name: string): boolean {
     return false;
   }
   const defaultName = resolveGatewayWindowsTaskName().toLowerCase();
-  return normalized === defaultName || normalized.startsWith("openclaw gateway");
+  return normalized === defaultName || normalized.startsWith("mioclaw gateway");
 }
 
 function tryExtractPlistLabel(contents: string): string | null {

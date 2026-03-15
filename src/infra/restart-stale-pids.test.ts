@@ -87,14 +87,14 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       );
     });
 
-    it("parses openclaw-gateway pids and excludes the current process", () => {
+    it("parses mioclaw-gateway pids and excludes the current process", () => {
       const stalePid = process.pid + 1;
       mockSpawnSync.mockReturnValue({
         error: null,
         status: 0,
         stdout: lsofOutput([
-          { pid: stalePid, cmd: "openclaw-gateway" },
-          { pid: process.pid, cmd: "openclaw-gateway" },
+          { pid: stalePid, cmd: "mioclaw-gateway" },
+          { pid: process.pid, cmd: "mioclaw-gateway" },
         ]),
         stderr: "",
       });
@@ -129,7 +129,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       // (once for the IPv4 socket, once for IPv6). Without dedup, terminateStaleProcessesSync
       // sends SIGTERM twice and returns killed=[pid, pid], corrupting the count.
       const stalePid = process.pid + 600;
-      const stdout = `p${stalePid}\ncopenclaw-gateway\np${stalePid}\ncopenclaw-gateway\n`;
+      const stdout = `p${stalePid}\ncmioclaw-gateway\np${stalePid}\ncmioclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
       expect(result).toEqual([stalePid]); // deduped — not [pid, pid]
@@ -169,8 +169,8 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
         error: null,
         status: 0,
         stdout: lsofOutput([
-          { pid: pid1, cmd: "openclaw-gateway" },
-          { pid: pid2, cmd: "openclaw-gateway" },
+          { pid: pid1, cmd: "mioclaw-gateway" },
+          { pid: pid2, cmd: "mioclaw-gateway" },
         ]),
         stderr: "",
       });
@@ -208,7 +208,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -234,7 +234,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -271,7 +271,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -280,7 +280,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -310,7 +310,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -319,7 +319,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 1,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "lsof: WARNING: can't stat() fuse",
           };
         }
@@ -349,7 +349,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
         return {
           error: null,
           status: 0,
-          stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+          stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
           stderr: "",
         };
       });
@@ -389,7 +389,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -413,7 +413,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -443,7 +443,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -452,7 +452,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -483,7 +483,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -513,7 +513,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -538,7 +538,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -567,7 +567,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
         return {
           error: null,
           status: 0,
-          stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+          stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
           stderr: "",
         };
       });
@@ -596,7 +596,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -632,7 +632,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }
@@ -684,7 +684,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       // be pushed, but the following openclaw entry still must be.
       const stalePid = process.pid + 700;
       // Mixed output: non-openclaw entry first, then openclaw entry
-      const stdout = `p${process.pid + 699}\ncnginx\np${stalePid}\ncopenclaw-gateway\n`;
+      const stdout = `p${process.pid + 699}\ncnginx\np${stalePid}\ncmioclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
       expect(result).toContain(stalePid);
@@ -696,7 +696,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       // (no 'c' line between them) — the first PID must be skipped, the second handled.
       const stalePid = process.pid + 701;
       // Two consecutive p-lines: first has no c-line before the next p-line
-      const stdout = `p${process.pid + 702}\np${stalePid}\ncopenclaw-gateway\n`;
+      const stdout = `p${process.pid + 702}\np${stalePid}\ncmioclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
       expect(result).toContain(stalePid);
@@ -708,7 +708,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       // currentPid and must not end up in the returned pids array.
       const stalePid = process.pid + 703;
       // p0 is invalid (not > 0); the following valid openclaw entry must still be found.
-      const stdout = `p0\ncopenclaw-gateway\np${stalePid}\ncopenclaw-gateway\n`;
+      const stdout = `p0\ncmioclaw-gateway\np${stalePid}\ncmioclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
       expect(result).toContain(stalePid);
@@ -721,7 +721,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       // must not throw or corrupt the pid list. Unknown lines are just skipped.
       const stalePid = process.pid + 704;
       // Intersperse an 'f' line (file descriptor marker) — not a 'p' or 'c' line
-      const stdout = `p${stalePid}\nf8\ncopenclaw-gateway\n`;
+      const stdout = `p${stalePid}\nf8\ncmioclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
       // The 'f' line must not corrupt parsing; stalePid must still be found
@@ -746,7 +746,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           return {
             error: null,
             status: 0,
-            stdout: lsofOutput([{ pid: stalePid, cmd: "openclaw-gateway" }]),
+            stdout: lsofOutput([{ pid: stalePid, cmd: "mioclaw-gateway" }]),
             stderr: "",
           };
         }

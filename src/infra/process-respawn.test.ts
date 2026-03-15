@@ -58,7 +58,7 @@ function expectLaunchdSupervisedWithoutKickstart(params?: { launchJobLabel?: str
   if (params?.launchJobLabel) {
     process.env.LAUNCH_JOB_LABEL = params.launchJobLabel;
   }
-  process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+  process.env.OPENCLAW_LAUNCHD_LABEL = "ai.mioclaw.gateway";
   const result = restartGatewayProcessWithFreshPid();
   expect(result.mode).toBe("supervised");
   expect(scheduleDetachedLaunchdRestartHandoffMock).toHaveBeenCalledWith({
@@ -81,7 +81,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("returns supervised when launchd hints are present on macOS (no kickstart)", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.LAUNCH_JOB_LABEL = "ai.openclaw.gateway";
+    process.env.LAUNCH_JOB_LABEL = "ai.mioclaw.gateway";
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
     expect(result.detail).toContain("launchd restart handoff");
@@ -95,13 +95,13 @@ describe("restartGatewayProcessWithFreshPid", () => {
   });
 
   it("returns supervised on macOS when launchd label is set (no kickstart)", () => {
-    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
+    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.mioclaw.gateway" });
   });
 
   it("launchd supervisor never returns failed regardless of triggerOpenClawRestart outcome", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.mioclaw.gateway";
     // Even if triggerOpenClawRestart *would* fail, launchd path must not call it.
     triggerOpenClawRestartMock.mockReturnValue({
       ok: false,
@@ -117,7 +117,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("falls back to plain supervised exit when launchd handoff scheduling fails", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.gateway";
+    process.env.XPC_SERVICE_NAME = "ai.mioclaw.gateway";
     scheduleDetachedLaunchdRestartHandoffMock.mockReturnValue({
       ok: false,
       detail: "spawn failed",
@@ -136,7 +136,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("does not schedule kickstart on non-darwin platforms", () => {
     setPlatform("linux");
     process.env.INVOCATION_ID = "abc123";
-    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.mioclaw.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -148,7 +148,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("returns supervised when XPC_SERVICE_NAME is set by launchd", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.gateway";
+    process.env.XPC_SERVICE_NAME = "ai.mioclaw.gateway";
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
     expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
@@ -184,7 +184,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("returns supervised when OPENCLAW_SYSTEMD_UNIT is set", () => {
     clearSupervisorHints();
     setPlatform("linux");
-    process.env.OPENCLAW_SYSTEMD_UNIT = "openclaw-gateway.service";
+    process.env.OPENCLAW_SYSTEMD_UNIT = "mioclaw-gateway.service";
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
     expect(spawnMock).not.toHaveBeenCalled();
