@@ -41,7 +41,7 @@ if (
 ) {
   // Imported as a dependency — skip all entry-point side effects.
 } else {
-  process.title = "openclaw";
+  process.title = "mioclaw";
   ensureOpenClawExecMarkerOnProcess();
   installProcessWarningFilter();
   normalizeEnv();
