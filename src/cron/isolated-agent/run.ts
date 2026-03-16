@@ -234,7 +234,7 @@ export async function runCronIsolatedAgentTurn(params: {
     : undefined;
   // Use the requested agentId even when there is no explicit agent config entry.
   // This ensures auth-profiles, workspace, and agentDir all resolve to the
-  // correct per-agent paths (e.g. ~/.openclaw/agents/<agentId>/agent/).
+  // correct per-agent paths (e.g. ~/.mioclaw/agents/<agentId>/agent/).
   const agentId = normalizedRequested ?? defaultAgentId;
   const agentCfg = buildCronAgentDefaultsConfig({
     defaults: params.cfg.agents?.defaults,
@@ -570,7 +570,7 @@ export async function runCronIsolatedAgentTurn(params: {
             // Passing an existing ID activates the resume watchdog profile
             // (noOutputTimeoutRatio 0.3, maxMs 180 s) instead of the fresh profile
             // (ratio 0.8, maxMs 600 s), causing jobs to time out at roughly 1/3 of
-            // the configured timeoutSeconds. See: https://github.com/openclaw/openclaw/issues/29774
+            // the configured timeoutSeconds. See: https://github.com/mioclaw/mioclaw/issues/29774
             const cliSessionId = cronSession.isNewSession
               ? undefined
               : getCliSessionId(cronSession.sessionEntry, providerOverride);
@@ -602,7 +602,7 @@ export async function runCronIsolatedAgentTurn(params: {
             agentId,
             trigger: "cron",
             // Cron jobs are trusted local automation, so isolated runs should
-            // inherit owner-only tooling like local `openclaw agent` runs.
+            // inherit owner-only tooling like local `mioclaw agent` runs.
             senderIsOwner: true,
             messageChannel,
             agentAccountId: resolvedDelivery.accountId,

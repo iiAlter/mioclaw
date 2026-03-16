@@ -90,7 +90,7 @@ describe("installPackageDir", () => {
   });
 
   it("keeps the existing install in place when staged validation fails", async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-install-package-dir-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-install-package-dir-"));
     const installBaseDir = path.join(fixtureRoot, "plugins");
     const sourceDir = path.join(fixtureRoot, "source");
     const targetDir = path.join(installBaseDir, "demo");
@@ -121,16 +121,16 @@ describe("installPackageDir", () => {
       error: "post-copy validation failed: Error: validation boom",
     });
     await expect(fs.readFile(path.join(targetDir, "marker.txt"), "utf8")).resolves.toBe("old");
+    await expect(listMatchingDirs(installBaseDir, ".mioclaw-install-stage-")).resolves.toHaveLength(
+      0,
+    );
     await expect(
-      listMatchingDirs(installBaseDir, ".openclaw-install-stage-"),
-    ).resolves.toHaveLength(0);
-    await expect(
-      listMatchingDirs(installBaseDir, ".openclaw-install-backups"),
+      listMatchingDirs(installBaseDir, ".mioclaw-install-backups"),
     ).resolves.toHaveLength(0);
   });
 
   it("restores the original install if publish rename fails", async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-install-package-dir-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-install-package-dir-"));
     const installBaseDir = path.join(fixtureRoot, "plugins");
     const sourceDir = path.join(fixtureRoot, "source");
     const targetDir = path.join(installBaseDir, "demo");
@@ -164,15 +164,15 @@ describe("installPackageDir", () => {
       error: "failed to copy plugin: Error: publish boom",
     });
     await expect(fs.readFile(path.join(targetDir, "marker.txt"), "utf8")).resolves.toBe("old");
-    await expect(
-      listMatchingDirs(installBaseDir, ".openclaw-install-stage-"),
-    ).resolves.toHaveLength(0);
-    const backupRoot = path.join(installBaseDir, ".openclaw-install-backups");
+    await expect(listMatchingDirs(installBaseDir, ".mioclaw-install-stage-")).resolves.toHaveLength(
+      0,
+    );
+    const backupRoot = path.join(installBaseDir, ".mioclaw-install-backups");
     await expect(fs.readdir(backupRoot)).resolves.toHaveLength(0);
   });
 
   it("aborts without outside writes when the install base is rebound before publish", async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-install-package-dir-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-install-package-dir-"));
     const sourceDir = path.join(fixtureRoot, "source");
     const installBaseDir = path.join(fixtureRoot, "plugins");
     const preservedInstallRoot = path.join(fixtureRoot, "plugins-preserved");
@@ -219,7 +219,7 @@ describe("installPackageDir", () => {
   });
 
   it("warns and leaves the backup in place when the install base changes before backup cleanup", async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-install-package-dir-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-install-package-dir-"));
     const sourceDir = path.join(fixtureRoot, "source");
     const installBaseDir = path.join(fixtureRoot, "plugins");
     const preservedInstallRoot = path.join(fixtureRoot, "plugins-preserved");
@@ -260,7 +260,7 @@ describe("installPackageDir", () => {
     ).rejects.toMatchObject({
       code: "ENOENT",
     });
-    const backupRoot = path.join(preservedInstallRoot, ".openclaw-install-backups");
+    const backupRoot = path.join(preservedInstallRoot, ".mioclaw-install-backups");
     await expect(fs.readdir(backupRoot)).resolves.toHaveLength(1);
   });
 });

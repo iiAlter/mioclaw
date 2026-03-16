@@ -38,7 +38,7 @@ function handleNonVersionRequest(req: IncomingMessage, res: ServerResponse): boo
 async function probeRelay(baseUrl: string, relayAuthToken: string): Promise<boolean> {
   return await probeAuthenticatedOpenClawRelay({
     baseUrl,
-    relayAuthHeader: "x-openclaw-relay-token",
+    relayAuthHeader: "x-mioclaw-relay-token",
     relayAuthToken,
   });
 }
@@ -76,17 +76,17 @@ describe("extension-relay-auth", () => {
     expect(tokens[0]).toBe(await resolveRelayAuthTokenForPort(18790));
   });
 
-  it("accepts authenticated openclaw relay probe responses", async () => {
+  it("accepts authenticated mioclaw relay probe responses", async () => {
     let seenToken: string | undefined;
     await withRelayServer(
       (req, res) => {
         if (handleNonVersionRequest(req, res)) {
           return;
         }
-        const header = req.headers["x-openclaw-relay-token"];
+        const header = req.headers["x-mioclaw-relay-token"];
         seenToken = Array.isArray(header) ? header[0] : header;
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ Browser: "OpenClaw/extension-relay" }));
+        res.end(JSON.stringify({ Browser: "Mioclaw/extension-relay" }));
       },
       async ({ port }) => {
         const token = await resolveRelayAuthTokenForPort(port);

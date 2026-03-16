@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 describe.runIf(process.platform !== "win32")("findGatewayPidsOnPortSync", () => {
-  it("parses lsof output and filters non-openclaw/current processes", () => {
+  it("parses lsof output and filters non-mioclaw/current processes", () => {
     spawnSyncMock.mockReturnValue({
       error: undefined,
       status: 0,

@@ -61,22 +61,22 @@ describe("acp prompt cwd prefix", () => {
   }
 
   it("redacts home directory in prompt prefix", async () => {
-    const requestSpy = await runPromptWithCwd(path.join(os.homedir(), "openclaw-test"));
+    const requestSpy = await runPromptWithCwd(path.join(os.homedir(), "mioclaw-test"));
     expect(requestSpy).toHaveBeenCalledWith(
       "chat.send",
       expect.objectContaining({
-        message: expect.stringMatching(/\[Working directory: ~[\\/]openclaw-test\]/),
+        message: expect.stringMatching(/\[Working directory: ~[\\/]mioclaw-test\]/),
       }),
       { expectFinal: true },
     );
   });
 
   it("keeps backslash separators when cwd uses them", async () => {
-    const requestSpy = await runPromptWithCwd(`${os.homedir()}\\openclaw-test`);
+    const requestSpy = await runPromptWithCwd(`${os.homedir()}\\mioclaw-test`);
     expect(requestSpy).toHaveBeenCalledWith(
       "chat.send",
       expect.objectContaining({
-        message: expect.stringContaining("[Working directory: ~\\openclaw-test]"),
+        message: expect.stringContaining("[Working directory: ~\\mioclaw-test]"),
       }),
       { expectFinal: true },
     );
@@ -87,7 +87,7 @@ describe("acp prompt cwd prefix", () => {
     sessionStore.createSession({
       sessionId: "session-1",
       sessionKey: "agent:main:main",
-      cwd: path.join(os.homedir(), "openclaw-test"),
+      cwd: path.join(os.homedir(), "mioclaw-test"),
     });
 
     const requestSpy = vi.fn(async (method: string) => {
@@ -133,7 +133,7 @@ describe("acp prompt cwd prefix", () => {
     sessionStore.createSession({
       sessionId: "session-1",
       sessionKey: "agent:main:main",
-      cwd: path.join(os.homedir(), "openclaw-test"),
+      cwd: path.join(os.homedir(), "mioclaw-test"),
     });
 
     const requestSpy = vi.fn(async (method: string) => {
@@ -175,7 +175,7 @@ describe("acp prompt cwd prefix", () => {
     expect(requestSpy).toHaveBeenCalledWith(
       "chat.send",
       expect.objectContaining({
-        systemProvenanceReceipt: expect.stringContaining("bridge=openclaw-acp"),
+        systemProvenanceReceipt: expect.stringContaining("bridge=mioclaw-acp"),
       }),
       { expectFinal: true },
     );

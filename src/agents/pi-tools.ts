@@ -97,7 +97,7 @@ function applyModelProviderToolPolicy(
   if (!isXaiProvider(params?.modelProvider, params?.modelId)) {
     return tools;
   }
-  // xAI/Grok providers expose a native web_search tool; sending OpenClaw's
+  // xAI/Grok providers expose a native web_search tool; sending Mioclaw's
   // web_search alongside it causes duplicate-name request failures.
   return tools.filter((tool) => !TOOL_DENY_FOR_XAI_PROVIDERS.has(tool.name));
 }

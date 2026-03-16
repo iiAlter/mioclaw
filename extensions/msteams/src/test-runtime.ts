@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import type { PluginRuntime } from "openclaw/plugin-sdk/msteams";
+import type { PluginRuntime } from "mioclaw/plugin-sdk/msteams";
 
 export const msteamsRuntimeStub = {
   state: {
@@ -10,7 +10,7 @@ export const msteamsRuntimeStub = {
         return override;
       }
       const resolvedHome = homedir ? homedir() : os.homedir();
-      return path.join(resolvedHome, ".openclaw");
+      return path.join(resolvedHome, ".mioclaw");
     },
   },
 } as unknown as PluginRuntime;

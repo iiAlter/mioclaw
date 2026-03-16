@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { PluginRuntime } from "openclaw/plugin-sdk/nostr";
+import type { PluginRuntime } from "mioclaw/plugin-sdk/nostr";
 import { describe, expect, it } from "vitest";
 import {
   readNostrBusState,
@@ -12,7 +12,7 @@ import { setNostrRuntime } from "./runtime.js";
 
 async function withTempStateDir<T>(fn: (dir: string) => Promise<T>) {
   const previous = process.env.OPENCLAW_STATE_DIR;
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-nostr-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-nostr-"));
   process.env.OPENCLAW_STATE_DIR = dir;
   setNostrRuntime({
     state: {
@@ -23,7 +23,7 @@ async function withTempStateDir<T>(fn: (dir: string) => Promise<T>) {
           return override;
         }
         const resolveHome = homedir ?? os.homedir;
-        return path.join(resolveHome(), ".openclaw");
+        return path.join(resolveHome(), ".mioclaw");
       },
     },
   } as PluginRuntime);

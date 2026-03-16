@@ -497,7 +497,7 @@ describe("AcpxRuntime", () => {
 
   it("does not mark backend unhealthy when a per-session cwd is missing", async () => {
     const { runtime } = await createMockRuntimeFixture();
-    const missingCwd = path.join(os.tmpdir(), "openclaw-acpx-runtime-test-missing-cwd");
+    const missingCwd = path.join(os.tmpdir(), "mioclaw-acpx-runtime-test-missing-cwd");
 
     await runtime.probeAvailability();
     expect(runtime.isHealthy()).toBe(true);

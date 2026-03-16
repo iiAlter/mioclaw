@@ -8,12 +8,12 @@ import {
   normalizeThinkLevel,
   resolvePreferredOpenClawTmpDir,
   supportsXHighThinking,
-} from "openclaw/plugin-sdk/llm-task";
-// NOTE: This extension is intended to be bundled with OpenClaw.
-// When running from source (tests/dev), OpenClaw internals live under src/.
+} from "mioclaw/plugin-sdk/llm-task";
+// NOTE: This extension is intended to be bundled with Mioclaw.
+// When running from source (tests/dev), Mioclaw internals live under src/.
 // When running from a built install, internals live under dist/ (no src/ tree).
 // So we resolve internal imports dynamically with src-first, dist-fallback.
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/llm-task";
+import type { OpenClawPluginApi } from "mioclaw/plugin-sdk/llm-task";
 
 type RunEmbeddedPiAgentFn = (params: Record<string, unknown>) => Promise<unknown>;
 
@@ -81,7 +81,7 @@ export function createLlmTaskTool(api: OpenClawPluginApi) {
     name: "llm-task",
     label: "LLM Task",
     description:
-      "Run a generic JSON-only LLM task and return schema-validated JSON. Designed for orchestration from Lobster workflows via openclaw.invoke.",
+      "Run a generic JSON-only LLM task and return schema-validated JSON. Designed for orchestration from Lobster workflows via mioclaw.invoke.",
     parameters: Type.Object({
       prompt: Type.String({ description: "Task instruction for the LLM." }),
       input: Type.Optional(Type.Unknown({ description: "Optional input payload for the task." })),
@@ -203,9 +203,7 @@ export function createLlmTaskTool(api: OpenClawPluginApi) {
 
       let tmpDir: string | null = null;
       try {
-        tmpDir = await fs.mkdtemp(
-          path.join(resolvePreferredOpenClawTmpDir(), "openclaw-llm-task-"),
-        );
+        tmpDir = await fs.mkdtemp(path.join(resolvePreferredOpenClawTmpDir(), "mioclaw-llm-task-"));
         const sessionId = `llm-task-${Date.now()}`;
         const sessionFile = path.join(tmpDir, "session.json");
 

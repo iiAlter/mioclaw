@@ -363,7 +363,7 @@ describe("promptCustomApiConfig", () => {
         providers: {
           filemain: {
             source: "file",
-            path: "/tmp/openclaw-missing-provider.json",
+            path: "/tmp/mioclaw-missing-provider.json",
             mode: "json",
           },
         },

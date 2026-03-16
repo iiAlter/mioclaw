@@ -25,7 +25,7 @@ const runtime: RuntimeEnv = {
 };
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-agent-acp-" });
+  return withTempHomeBase(fn, { prefix: "mioclaw-agent-acp-" });
 }
 
 function createAcpEnabledConfig(home: string, storePath: string): OpenClawConfig {
@@ -40,7 +40,7 @@ function createAcpEnabledConfig(home: string, storePath: string): OpenClawConfig
       defaults: {
         model: { primary: "openai/gpt-5.3-codex" },
         models: { "openai/gpt-5.3-codex": {} },
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "mioclaw"),
       },
     },
     session: { store: storePath, mainKey: "main" },

@@ -113,8 +113,8 @@ describe("resolveInitialTuiAgentId", () => {
   const cfg: OpenClawConfig = {
     agents: {
       list: [
-        { id: "main", workspace: "/tmp/openclaw" },
-        { id: "ops", workspace: "/tmp/openclaw/projects/ops" },
+        { id: "main", workspace: "/tmp/mioclaw" },
+        { id: "ops", workspace: "/tmp/mioclaw/projects/ops" },
       ],
     },
   };
@@ -125,7 +125,7 @@ describe("resolveInitialTuiAgentId", () => {
         cfg,
         fallbackAgentId: "main",
         initialSessionInput: "",
-        cwd: "/tmp/openclaw/projects/ops/src",
+        cwd: "/tmp/mioclaw/projects/ops/src",
       }),
     ).toBe("ops");
   });
@@ -136,7 +136,7 @@ describe("resolveInitialTuiAgentId", () => {
         cfg,
         fallbackAgentId: "main",
         initialSessionInput: "agent:main:incident",
-        cwd: "/tmp/openclaw/projects/ops/src",
+        cwd: "/tmp/mioclaw/projects/ops/src",
       }),
     ).toBe("main");
   });
@@ -157,8 +157,8 @@ describe("resolveGatewayDisconnectState", () => {
   it("returns pairing recovery guidance when disconnect reason requires pairing", () => {
     const state = resolveGatewayDisconnectState("gateway closed (1008): pairing required");
     expect(state.connectionStatus).toContain("pairing required");
-    expect(state.activityStatus).toBe("pairing required: run openclaw devices list");
-    expect(state.pairingHint).toContain("openclaw devices list");
+    expect(state.activityStatus).toBe("pairing required: run mioclaw devices list");
+    expect(state.pairingHint).toContain("mioclaw devices list");
   });
 
   it("falls back to idle for generic disconnect reasons", () => {

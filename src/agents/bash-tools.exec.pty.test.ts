@@ -20,7 +20,7 @@ test("exec supports pty output", async () => {
 
 test("exec sets OPENCLAW_SHELL in pty mode", async () => {
   const tool = createExecTool({ allowBackground: false, security: "full", ask: "off" });
-  const result = await tool.execute("toolcall-openclaw-shell", {
+  const result = await tool.execute("toolcall-mioclaw-shell", {
     command: "node -e \"process.stdout.write(process.env.OPENCLAW_SHELL || '')\"",
     pty: true,
   });

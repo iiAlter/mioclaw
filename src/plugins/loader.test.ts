@@ -56,7 +56,7 @@ function mkdirSafe(dir: string) {
   chmodSafeDir(dir);
 }
 
-const fixtureRoot = mkdtempSafe(path.join(os.tmpdir(), "openclaw-plugin-"));
+const fixtureRoot = mkdtempSafe(path.join(os.tmpdir(), "mioclaw-plugin-"));
 let tempDirIndex = 0;
 const prevBundledDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
 const EMPTY_PLUGIN_SCHEMA = { type: "object", additionalProperties: false, properties: {} };
@@ -104,7 +104,7 @@ function writePlugin(params: {
   const file = path.join(dir, filename);
   fs.writeFileSync(file, params.body, "utf-8");
   fs.writeFileSync(
-    path.join(dir, "openclaw.plugin.json"),
+    path.join(dir, "mioclaw.plugin.json"),
     JSON.stringify(
       {
         id: params.id,
@@ -153,7 +153,7 @@ function loadBundledMemoryPluginRegistry(options?: {
           name: options.packageMeta.name,
           version: options.packageMeta.version,
           description: options.packageMeta.description,
-          openclaw: { extensions: [`./${pluginFilename}`] },
+          mioclaw: { extensions: [`./${pluginFilename}`] },
         },
         null,
         2,
@@ -255,7 +255,7 @@ function createEscapingEntryFixture(params: { id: string; sourceBody: string }) 
   const linkedEntry = path.join(pluginDir, "entry.cjs");
   fs.writeFileSync(outsideEntry, params.sourceBody, "utf-8");
   fs.writeFileSync(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "mioclaw.plugin.json"),
     JSON.stringify(
       {
         id: params.id,
@@ -398,7 +398,7 @@ describe("loadOpenClawPlugins", () => {
   it("preserves package.json metadata for bundled memory plugins", () => {
     const registry = loadBundledMemoryPluginRegistry({
       packageMeta: {
-        name: "@openclaw/memory-core",
+        name: "@mioclaw/memory-core",
         version: "1.2.3",
         description: "Memory plugin package",
       },
@@ -725,10 +725,10 @@ describe("loadOpenClawPlugins", () => {
     const stateDir = makeTempDir();
     const bundledDir = makeTempDir();
     const plugin = writePlugin({
-      id: "openclaw-home-demo",
-      dir: path.join(openclawHome, "plugins", "openclaw-home-demo"),
+      id: "mioclaw-home-demo",
+      dir: path.join(openclawHome, "plugins", "mioclaw-home-demo"),
       filename: "index.cjs",
-      body: `module.exports = { id: "openclaw-home-demo", register() {} };`,
+      body: `module.exports = { id: "mioclaw-home-demo", register() {} };`,
     });
 
     const registry = loadOpenClawPlugins({
@@ -741,12 +741,12 @@ describe("loadOpenClawPlugins", () => {
       },
       config: {
         plugins: {
-          allow: ["openclaw-home-demo"],
+          allow: ["mioclaw-home-demo"],
           entries: {
-            "openclaw-home-demo": { enabled: true },
+            "mioclaw-home-demo": { enabled: true },
           },
           load: {
-            paths: ["~/plugins/openclaw-home-demo"],
+            paths: ["~/plugins/mioclaw-home-demo"],
           },
         },
       },
@@ -754,7 +754,7 @@ describe("loadOpenClawPlugins", () => {
 
     expect(
       fs.realpathSync(
-        registry.plugins.find((entry) => entry.id === "openclaw-home-demo")?.source ?? "",
+        registry.plugins.find((entry) => entry.id === "mioclaw-home-demo")?.source ?? "",
       ),
     ).toBe(fs.realpathSync(plugin.file));
   });
@@ -1306,7 +1306,7 @@ describe("loadOpenClawPlugins", () => {
       body: `module.exports = { id: "memory-b", kind: "memory", register() {} };`,
     });
     fs.writeFileSync(
-      path.join(memoryADir, "openclaw.plugin.json"),
+      path.join(memoryADir, "mioclaw.plugin.json"),
       JSON.stringify(
         {
           id: "memory-a",
@@ -1319,7 +1319,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(memoryBDir, "openclaw.plugin.json"),
+      path.join(memoryBDir, "mioclaw.plugin.json"),
       JSON.stringify(
         {
           id: "memory-b",
@@ -1475,7 +1475,7 @@ describe("loadOpenClawPlugins", () => {
   it("does not auto-load workspace-discovered plugins unless explicitly trusted", () => {
     useNoBundledPlugins();
     const workspaceDir = makeTempDir();
-    const workspaceExtDir = path.join(workspaceDir, ".openclaw", "extensions", "workspace-helper");
+    const workspaceExtDir = path.join(workspaceDir, ".mioclaw", "extensions", "workspace-helper");
     mkdirSafe(workspaceExtDir);
     writePlugin({
       id: "workspace-helper",
@@ -1503,7 +1503,7 @@ describe("loadOpenClawPlugins", () => {
   it("loads workspace-discovered plugins when plugins.allow explicitly trusts them", () => {
     useNoBundledPlugins();
     const workspaceDir = makeTempDir();
-    const workspaceExtDir = path.join(workspaceDir, ".openclaw", "extensions", "workspace-helper");
+    const workspaceExtDir = path.join(workspaceDir, ".mioclaw", "extensions", "workspace-helper");
     mkdirSafe(workspaceExtDir);
     writePlugin({
       id: "workspace-helper",
@@ -1539,7 +1539,7 @@ describe("loadOpenClawPlugins", () => {
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
 
     const workspaceDir = makeTempDir();
-    const workspaceExtDir = path.join(workspaceDir, ".openclaw", "extensions", "shadowed");
+    const workspaceExtDir = path.join(workspaceDir, ".mioclaw", "extensions", "shadowed");
     mkdirSafe(workspaceExtDir);
     writePlugin({
       id: "shadowed",
@@ -1844,7 +1844,7 @@ describe("loadOpenClawPlugins", () => {
       filename: "legacy-root-import.cjs",
       body: `module.exports = {
   id: "legacy-root-import",
-  configSchema: (require("openclaw/plugin-sdk").emptyPluginConfigSchema)(),
+  configSchema: (require("mioclaw/plugin-sdk").emptyPluginConfigSchema)(),
   register() {},
 };`,
     });

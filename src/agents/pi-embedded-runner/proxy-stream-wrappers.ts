@@ -3,11 +3,11 @@ import { streamSimple } from "@mariozechner/pi-ai";
 import type { ThinkLevel } from "../../auto-reply/thinking.js";
 
 const OPENROUTER_APP_HEADERS: Record<string, string> = {
-  "HTTP-Referer": "https://openclaw.ai",
-  "X-Title": "OpenClaw",
+  "HTTP-Referer": "https://mioclaw.ai",
+  "X-Title": "Mioclaw",
 };
 const KILOCODE_FEATURE_HEADER = "X-KILOCODE-FEATURE";
-const KILOCODE_FEATURE_DEFAULT = "openclaw";
+const KILOCODE_FEATURE_DEFAULT = "mioclaw";
 const KILOCODE_FEATURE_ENV_VAR = "KILOCODE_FEATURE";
 
 function resolveKilocodeAppHeaders(): Record<string, string> {

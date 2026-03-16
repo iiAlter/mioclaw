@@ -11,7 +11,7 @@ import {
 const tempRoots: string[] = [];
 
 async function createBaseDir(): Promise<string> {
-  const baseDir = await mkdtemp(join(tmpdir(), "openclaw-device-bootstrap-"));
+  const baseDir = await mkdtemp(join(tmpdir(), "mioclaw-device-bootstrap-"));
   tempRoots.push(baseDir);
   return baseDir;
 }

@@ -9,8 +9,8 @@ describe("buildPlatformRuntimeLogHints", () => {
   it("strips windows drive prefixes from darwin display paths", async () => {
     vi.doMock("./launchd.js", () => ({
       resolveGatewayLogPaths: () => ({
-        stdoutPath: "C:\\tmp\\openclaw-state\\logs\\gateway.log",
-        stderrPath: "C:\\tmp\\openclaw-state\\logs\\gateway.err.log",
+        stdoutPath: "C:\\tmp\\mioclaw-state\\logs\\gateway.log",
+        stderrPath: "C:\\tmp\\mioclaw-state\\logs\\gateway.err.log",
       }),
     }));
 
@@ -23,8 +23,8 @@ describe("buildPlatformRuntimeLogHints", () => {
         windowsTaskName: "Mioclaw Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /tmp/openclaw-state/logs/gateway.log",
-      "Launchd stderr (if installed): /tmp/openclaw-state/logs/gateway.err.log",
+      "Launchd stdout (if installed): /tmp/mioclaw-state/logs/gateway.log",
+      "Launchd stderr (if installed): /tmp/mioclaw-state/logs/gateway.err.log",
     ]);
   });
 });

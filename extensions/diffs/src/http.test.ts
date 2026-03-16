@@ -10,7 +10,7 @@ describe("createDiffsHttpHandler", () => {
   let cleanupRootDir: () => Promise<void>;
 
   beforeEach(async () => {
-    ({ store, cleanup: cleanupRootDir } = await createDiffStoreHarness("openclaw-diffs-http-"));
+    ({ store, cleanup: cleanupRootDir } = await createDiffStoreHarness("mioclaw-diffs-http-"));
   });
 
   afterEach(async () => {

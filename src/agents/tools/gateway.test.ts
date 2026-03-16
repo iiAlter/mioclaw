@@ -15,7 +15,7 @@ vi.mock("../../gateway/call.js", () => ({
 
 describe("gateway tool defaults", () => {
   const envSnapshot = {
-    openclaw: process.env.OPENCLAW_GATEWAY_TOKEN,
+    mioclaw: process.env.OPENCLAW_GATEWAY_TOKEN,
     clawdbot: process.env.CLAWDBOT_GATEWAY_TOKEN,
   };
 
@@ -27,10 +27,10 @@ describe("gateway tool defaults", () => {
   });
 
   afterAll(() => {
-    if (envSnapshot.openclaw === undefined) {
+    if (envSnapshot.mioclaw === undefined) {
       delete process.env.OPENCLAW_GATEWAY_TOKEN;
     } else {
-      process.env.OPENCLAW_GATEWAY_TOKEN = envSnapshot.openclaw;
+      process.env.OPENCLAW_GATEWAY_TOKEN = envSnapshot.mioclaw;
     }
     if (envSnapshot.clawdbot === undefined) {
       delete process.env.CLAWDBOT_GATEWAY_TOKEN;

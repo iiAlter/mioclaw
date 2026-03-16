@@ -1,4 +1,4 @@
-const PREFIX = "openclaw:pinned:";
+const PREFIX = "mioclaw:pinned:";
 
 export class PinnedMessages {
   private key: string;

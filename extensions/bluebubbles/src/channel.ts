@@ -2,7 +2,7 @@ import type {
   ChannelAccountSnapshot,
   ChannelPlugin,
   OpenClawConfig,
-} from "openclaw/plugin-sdk/bluebubbles";
+} from "mioclaw/plugin-sdk/bluebubbles";
 import {
   applyAccountNameToChannelSection,
   buildChannelConfigSchema,
@@ -17,14 +17,14 @@ import {
   resolveBlueBubblesGroupRequireMention,
   resolveBlueBubblesGroupToolPolicy,
   setAccountEnabledInConfigSection,
-} from "openclaw/plugin-sdk/bluebubbles";
+} from "mioclaw/plugin-sdk/bluebubbles";
 import {
   buildAccountScopedDmSecurityPolicy,
   collectOpenGroupPolicyRestrictSendersWarnings,
   createAccountStatusSink,
   formatNormalizedAllowFromEntries,
   mapAllowFromEntries,
-} from "openclaw/plugin-sdk/compat";
+} from "mioclaw/plugin-sdk/compat";
 import {
   listBlueBubblesAccountIds,
   type ResolvedBlueBubblesAccount,

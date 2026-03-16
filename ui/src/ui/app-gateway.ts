@@ -201,7 +201,7 @@ export function connectGateway(host: GatewayHost) {
     url: host.settings.gatewayUrl,
     token: host.settings.token.trim() ? host.settings.token : undefined,
     password: host.password.trim() ? host.password : undefined,
-    clientName: "openclaw-control-ui",
+    clientName: "mioclaw-control-ui",
     clientVersion,
     mode: "webchat",
     instanceId: host.clientInstanceId,

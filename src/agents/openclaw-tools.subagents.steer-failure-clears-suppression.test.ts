@@ -20,7 +20,7 @@ describe("openclaw-tools: subagents steer failure", () => {
     callGatewayMock.mockClear();
     const storePath = path.join(
       os.tmpdir(),
-      `openclaw-subagents-steer-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+      `mioclaw-subagents-steer-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     setSubagentsConfigOverride({
       session: {

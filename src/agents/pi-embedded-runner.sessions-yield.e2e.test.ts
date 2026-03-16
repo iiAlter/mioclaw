@@ -136,7 +136,7 @@ beforeAll(async () => {
   responsePlan = [];
   observedContexts = [];
   ({ runEmbeddedPiAgent } = await import("./pi-embedded-runner/run.js"));
-  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-yield-e2e-"));
+  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-yield-e2e-"));
   agentDir = path.join(tempRoot, "agent");
   workspaceDir = path.join(tempRoot, "workspace");
   await fs.mkdir(agentDir, { recursive: true });
@@ -253,8 +253,7 @@ describe("sessions_yield e2e", () => {
 
       const entries = await readSessionEntries(sessionFile);
       const yieldContext = entries.find(
-        (entry) =>
-          entry.type === "custom_message" && entry.customType === "openclaw.sessions_yield",
+        (entry) => entry.type === "custom_message" && entry.customType === "mioclaw.sessions_yield",
       );
       expect(yieldContext).toMatchObject({
         content: expect.stringContaining("Yielding turn."),

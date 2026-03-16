@@ -19,7 +19,7 @@ vi.mock("../config/config.js", () => ({
 
 vi.mock("../daemon/constants.js", () => ({
   resolveGatewayLaunchAgentLabel: vi.fn(() => "ai.mioclaw.gateway"),
-  resolveNodeLaunchAgentLabel: vi.fn(() => "ai.openclaw.node"),
+  resolveNodeLaunchAgentLabel: vi.fn(() => "ai.mioclaw.node"),
 }));
 
 vi.mock("../daemon/diagnostics.js", () => ({

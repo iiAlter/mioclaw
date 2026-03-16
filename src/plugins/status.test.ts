@@ -41,7 +41,7 @@ describe("buildPluginStatusReport", () => {
   });
 
   it("forwards an explicit env to plugin loading", () => {
-    const env = { HOME: "/tmp/openclaw-home" } as NodeJS.ProcessEnv;
+    const env = { HOME: "/tmp/mioclaw-home" } as NodeJS.ProcessEnv;
 
     buildPluginStatusReport({
       config: {},

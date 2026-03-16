@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/mattermost";
-import { createReplyPrefixOptions } from "openclaw/plugin-sdk/mattermost";
+import type { OpenClawConfig } from "mioclaw/plugin-sdk/mattermost";
+import { createReplyPrefixOptions } from "mioclaw/plugin-sdk/mattermost";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 const { sendMessageMattermostMock } = vi.hoisted(() => ({
   sendMessageMattermostMock: vi.fn(),

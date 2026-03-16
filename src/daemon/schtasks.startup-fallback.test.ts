@@ -56,7 +56,7 @@ function resolveStartupEntryPath(env: Record<string, string>) {
 async function withWindowsEnv(
   run: (params: { tmpDir: string; env: Record<string, string> }) => Promise<void>,
 ) {
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-win-startup-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-win-startup-"));
   const env = {
     USERPROFILE: tmpDir,
     APPDATA: path.join(tmpDir, "AppData", "Roaming"),

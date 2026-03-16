@@ -302,7 +302,7 @@ export function resolveConfigDir(
   if (override) {
     return resolveUserPath(override, env, homedir);
   }
-  const newDir = path.join(resolveRequiredHomeDir(env, homedir), ".openclaw");
+  const newDir = path.join(resolveRequiredHomeDir(env, homedir), ".mioclaw");
   try {
     const hasNew = fs.existsSync(newDir);
     if (hasNew) {

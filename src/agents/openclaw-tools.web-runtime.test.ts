@@ -36,14 +36,14 @@ async function prepareAndActivate(params: { config: OpenClawConfig; env?: NodeJS
   const snapshot = await prepareSecretsRuntimeSnapshot({
     config: params.config,
     env: params.env,
-    agentDirs: ["/tmp/openclaw-agent-main"],
+    agentDirs: ["/tmp/mioclaw-agent-main"],
     loadAuthStore: () => ({ version: 1, profiles: {} }),
   });
   activateSecretsRuntimeSnapshot(snapshot);
   return snapshot;
 }
 
-describe("openclaw tools runtime web metadata wiring", () => {
+describe("mioclaw tools runtime web metadata wiring", () => {
   const priorFetch = global.fetch;
 
   afterEach(() => {

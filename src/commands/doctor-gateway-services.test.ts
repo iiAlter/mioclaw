@@ -119,7 +119,7 @@ async function runRepair(cfg: OpenClawConfig) {
 
 const gatewayProgramArguments = [
   "/usr/bin/node",
-  "/usr/local/bin/openclaw",
+  "/usr/local/bin/mioclaw",
   "gateway",
   "--port",
   "18789",
@@ -239,7 +239,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     mocks.readCommand.mockResolvedValue({
       programArguments: [
         "/usr/bin/node",
-        "/Users/test/Library/pnpm/global/5/node_modules/openclaw/dist/index.js",
+        "/Users/test/Library/pnpm/global/5/node_modules/mioclaw/dist/index.js",
         "gateway",
         "--port",
         "18789",
@@ -253,7 +253,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     mocks.buildGatewayInstallPlan.mockResolvedValue({
       programArguments: [
         "/usr/bin/node",
-        "/Users/test/Library/pnpm/global/5/node_modules/.pnpm/openclaw@2026.3.12/node_modules/openclaw/dist/index.js",
+        "/Users/test/Library/pnpm/global/5/node_modules/.pnpm/mioclaw@2026.3.12/node_modules/mioclaw/dist/index.js",
         "gateway",
         "--port",
         "18789",
@@ -261,10 +261,10 @@ describe("maybeRepairGatewayServiceConfig", () => {
       environment: {},
     });
     fsMocks.realpath.mockImplementation(async (value: string) => {
-      if (value.includes("/global/5/node_modules/openclaw/")) {
+      if (value.includes("/global/5/node_modules/mioclaw/")) {
         return value.replace(
-          "/global/5/node_modules/openclaw/",
-          "/global/5/node_modules/.pnpm/openclaw@2026.3.12/node_modules/openclaw/",
+          "/global/5/node_modules/mioclaw/",
+          "/global/5/node_modules/.pnpm/mioclaw@2026.3.12/node_modules/mioclaw/",
         );
       }
       return value;
@@ -283,7 +283,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     mocks.readCommand.mockResolvedValue({
       programArguments: [
         "/usr/bin/node",
-        "/opt/openclaw/../openclaw/dist/index.js",
+        "/opt/mioclaw/../mioclaw/dist/index.js",
         "gateway",
         "--port",
         "18789",
@@ -297,7 +297,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     mocks.buildGatewayInstallPlan.mockResolvedValue({
       programArguments: [
         "/usr/bin/node",
-        "/opt/openclaw/dist/index.js",
+        "/opt/mioclaw/dist/index.js",
         "gateway",
         "--port",
         "18789",
@@ -319,7 +319,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     mocks.readCommand.mockResolvedValue({
       programArguments: [
         "/usr/bin/node",
-        "/Users/test/.nvm/versions/node/v22.0.0/lib/node_modules/openclaw/dist/index.js",
+        "/Users/test/.nvm/versions/node/v22.0.0/lib/node_modules/mioclaw/dist/index.js",
         "gateway",
         "--port",
         "18789",
@@ -333,7 +333,7 @@ describe("maybeRepairGatewayServiceConfig", () => {
     mocks.buildGatewayInstallPlan.mockResolvedValue({
       programArguments: [
         "/usr/bin/node",
-        "/Users/test/Library/pnpm/global/5/node_modules/openclaw/dist/index.js",
+        "/Users/test/Library/pnpm/global/5/node_modules/mioclaw/dist/index.js",
         "gateway",
         "--port",
         "18789",
@@ -535,7 +535,7 @@ describe("maybeScanExtraGatewayServices", () => {
       "Legacy gateway removed",
     );
     expect(runtime.log).toHaveBeenCalledWith(
-      "Legacy gateway services removed. Installing OpenClaw gateway next.",
+      "Legacy gateway services removed. Installing Mioclaw gateway next.",
     );
   });
 });

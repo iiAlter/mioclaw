@@ -247,7 +247,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
             ...entry.hook,
             name,
             description,
-            source: "openclaw-plugin",
+            source: "mioclaw-plugin",
             pluginId: record.id,
           },
           metadata: {
@@ -259,7 +259,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
           hook: {
             name,
             description,
-            source: "openclaw-plugin",
+            source: "mioclaw-plugin",
             pluginId: record.id,
             filePath: record.source,
             baseDir: path.dirname(record.source),

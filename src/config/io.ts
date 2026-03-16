@@ -204,10 +204,10 @@ function formatConfigValidationFailure(pathLabel: string, issueMessage: string):
     `Configuration mismatch: ${policyPath} is "open", but ${allowPath} does not include "*".`,
     "",
     "Fix with:",
-    `  openclaw config set ${allowPath} '["*"]'`,
+    `  mioclaw config set ${allowPath} '["*"]'`,
     "",
     "Or switch policy:",
-    `  openclaw config set ${policyPath} "pairing"`,
+    `  mioclaw config set ${policyPath} "pairing"`,
   ].join("\n");
 }
 
@@ -627,7 +627,7 @@ function warnIfConfigFromFuture(cfg: OpenClawConfig, logger: Pick<typeof console
   }
   if (cmp < 0) {
     logger.warn(
-      `Config was last written by a newer OpenClaw (${touched}); current version is ${VERSION}.`,
+      `Config was last written by a newer Mioclaw (${touched}); current version is ${VERSION}.`,
     );
   }
 }
@@ -1555,5 +1555,5 @@ export async function writeConfigFile(
     clearRuntimeConfigSnapshot();
   }
   // When we had no runtime snapshot, keep callers reading from disk/cache so external/manual
-  // edits to openclaw.json remain visible (no stale snapshot).
+  // edits to mioclaw.json remain visible (no stale snapshot).
 }

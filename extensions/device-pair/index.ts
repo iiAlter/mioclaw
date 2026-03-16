@@ -1,5 +1,5 @@
 import os from "node:os";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/device-pair";
+import type { OpenClawPluginApi } from "mioclaw/plugin-sdk/device-pair";
 import {
   approveDevicePairing,
   issueDeviceBootstrapToken,
@@ -7,7 +7,7 @@ import {
   resolveGatewayBindUrl,
   runPluginCommandWithTimeout,
   resolveTailnetHostWithRunner,
-} from "openclaw/plugin-sdk/device-pair";
+} from "mioclaw/plugin-sdk/device-pair";
 import qrcode from "qrcode-terminal";
 import {
   armPairNotifyOnce,
@@ -433,7 +433,7 @@ export default function register(api: OpenClawPluginApi) {
             if (send) {
               await send(
                 target,
-                ["Scan this QR code with the OpenClaw iOS app:", "", "```", qrAscii, "```"].join(
+                ["Scan this QR code with the Mioclaw iOS app:", "", "```", qrAscii, "```"].join(
                   "\n",
                 ),
                 {
@@ -487,7 +487,7 @@ export default function register(api: OpenClawPluginApi) {
         // WebUI + CLI/TUI: ASCII QR
         return {
           text: [
-            "Scan this QR code with the OpenClaw iOS app:",
+            "Scan this QR code with the Mioclaw iOS app:",
             "",
             "```",
             qrAscii,

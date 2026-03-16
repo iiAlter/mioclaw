@@ -1,6 +1,6 @@
 import path from "node:path";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/diffs";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/diffs";
+import type { OpenClawPluginApi } from "mioclaw/plugin-sdk/diffs";
+import { resolvePreferredOpenClawTmpDir } from "mioclaw/plugin-sdk/diffs";
 import {
   diffsPluginConfigSchema,
   resolveDiffsPluginDefaults,
@@ -20,7 +20,7 @@ const plugin = {
     const defaults = resolveDiffsPluginDefaults(api.pluginConfig);
     const security = resolveDiffsPluginSecurity(api.pluginConfig);
     const store = new DiffArtifactStore({
-      rootDir: path.join(resolvePreferredOpenClawTmpDir(), "openclaw-diffs"),
+      rootDir: path.join(resolvePreferredOpenClawTmpDir(), "mioclaw-diffs"),
       logger: api.logger,
     });
 

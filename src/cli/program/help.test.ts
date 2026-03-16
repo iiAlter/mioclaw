@@ -32,7 +32,7 @@ vi.mock("../../infra/git-commit.js", () => ({
 }));
 
 vi.mock("../cli-name.js", () => ({
-  resolveCliName: () => "openclaw",
+  resolveCliName: () => "mioclaw",
   replaceCliName: (cmd: string) => cmd,
 }));
 
@@ -91,7 +91,7 @@ describe("configureProgramHelp", () => {
   }
 
   it("adds root help hint and marks commands with subcommands", () => {
-    process.argv = ["node", "openclaw", "--help"];
+    process.argv = ["node", "mioclaw", "--help"];
     const program = makeProgramWithCommands();
     configureProgramHelp(program, testProgramContext);
 
@@ -103,18 +103,18 @@ describe("configureProgramHelp", () => {
   });
 
   it("includes banner and docs/examples in root help output", () => {
-    process.argv = ["node", "openclaw", "--help"];
+    process.argv = ["node", "mioclaw", "--help"];
     const program = makeProgramWithCommands();
     configureProgramHelp(program, testProgramContext);
 
     const help = captureHelpOutput(program);
     expect(help).toContain("BANNER-LINE");
     expect(help).toContain("Examples:");
-    expect(help).toContain("https://docs.openclaw.ai/cli");
+    expect(help).toContain("https://docs.mioclaw.ai/cli");
   });
 
   it("prints version and exits immediately when version flags are present", () => {
-    process.argv = ["node", "openclaw", "--version"];
+    process.argv = ["node", "mioclaw", "--version"];
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     const exitSpy = vi.spyOn(process, "exit").mockImplementation(((code?: number) => {
       throw new Error(`exit:${code ?? ""}`);
@@ -122,7 +122,7 @@ describe("configureProgramHelp", () => {
 
     const program = makeProgramWithCommands();
     expect(() => configureProgramHelp(program, testProgramContext)).toThrow("exit:0");
-    expect(logSpy).toHaveBeenCalledWith("OpenClaw 9.9.9-test (abc1234)");
+    expect(logSpy).toHaveBeenCalledWith("Mioclaw 9.9.9-test (abc1234)");
     expect(exitSpy).toHaveBeenCalledWith(0);
 
     logSpy.mockRestore();
@@ -130,7 +130,7 @@ describe("configureProgramHelp", () => {
   });
 
   it("prints version and exits immediately without commit metadata", () => {
-    process.argv = ["node", "openclaw", "--version"];
+    process.argv = ["node", "mioclaw", "--version"];
     resolveCommitHashMock.mockReturnValue(null);
 
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
@@ -140,7 +140,7 @@ describe("configureProgramHelp", () => {
 
     const program = makeProgramWithCommands();
     expect(() => configureProgramHelp(program, testProgramContext)).toThrow("exit:0");
-    expect(logSpy).toHaveBeenCalledWith("OpenClaw 9.9.9-test");
+    expect(logSpy).toHaveBeenCalledWith("Mioclaw 9.9.9-test");
     expect(exitSpy).toHaveBeenCalledWith(0);
 
     logSpy.mockRestore();

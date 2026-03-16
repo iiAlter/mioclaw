@@ -8,7 +8,7 @@ import {
   type ProviderAuthMethodNonInteractiveContext,
   type ProviderAuthResult,
   type ProviderDiscoveryContext,
-} from "openclaw/plugin-sdk/core";
+} from "mioclaw/plugin-sdk/core";
 
 const PROVIDER_ID = "sglang";
 const DEFAULT_BASE_URL = "http://127.0.0.1:30000/v1";

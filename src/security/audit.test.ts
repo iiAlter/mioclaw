@@ -191,7 +191,7 @@ describe("security audit", () => {
     const tmp = await makeTmpDir(label);
     const stateDir = path.join(tmp, "state");
     await fs.mkdir(stateDir, { recursive: true, mode: 0o700 });
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "mioclaw.json");
     await fs.writeFile(configPath, "{}\n", "utf-8");
     if (!isWindows) {
       await fs.chmod(configPath, 0o600);
@@ -219,7 +219,7 @@ describe("security audit", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify({
         name: "evil-plugin",
-        openclaw: { extensions: [".hidden/index.js"] },
+        mioclaw: { extensions: [".hidden/index.js"] },
       }),
     );
     await fs.writeFile(
@@ -249,7 +249,7 @@ description: test skill
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-security-audit-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-security-audit-"));
     channelSecurityRoot = path.join(fixtureRoot, "channel-security");
     await fs.mkdir(channelSecurityRoot, { recursive: true, mode: 0o700 });
     sharedChannelSecurityStateDir = path.join(channelSecurityRoot, "state-shared");
@@ -567,7 +567,7 @@ description: test skill
     const riskyGlobalTrustedDirs =
       process.platform === "win32"
         ? [String.raw`C:\Users\ci-user\bin`, String.raw`C:\Users\ci-user\.local\bin`]
-        : ["/usr/local/bin", "/tmp/openclaw-safe-bins"];
+        : ["/usr/local/bin", "/tmp/mioclaw-safe-bins"];
     const cfg: OpenClawConfig = {
       tools: {
         exec: {
@@ -667,7 +667,7 @@ description: test skill
     const tmp = await makeTmpDir("win");
     const stateDir = path.join(tmp, "state");
     await fs.mkdir(stateDir, { recursive: true });
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "mioclaw.json");
     await fs.writeFile(configPath, "{}\n", "utf-8");
 
     const user = "DESKTOP-TEST\\Tester";
@@ -705,7 +705,7 @@ description: test skill
     const tmp = await makeTmpDir("win-open");
     const stateDir = path.join(tmp, "state");
     await fs.mkdir(stateDir, { recursive: true });
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "mioclaw.json");
     await fs.writeFile(configPath, "{}\n", "utf-8");
 
     const user = "DESKTOP-TEST\\Tester";
@@ -748,19 +748,19 @@ description: test skill
     const execDockerRawFn = (async (args: string[]) => {
       if (args[0] === "ps") {
         return {
-          stdout: Buffer.from("openclaw-sbx-browser-old\nopenclaw-sbx-browser-missing-hash\n"),
+          stdout: Buffer.from("mioclaw-sbx-browser-old\nopenclaw-sbx-browser-missing-hash\n"),
           stderr: Buffer.alloc(0),
           code: 0,
         };
       }
-      if (args[0] === "inspect" && args.at(-1) === "openclaw-sbx-browser-old") {
+      if (args[0] === "inspect" && args.at(-1) === "mioclaw-sbx-browser-old") {
         return {
           stdout: Buffer.from("abc123\tepoch-v0\n"),
           stderr: Buffer.alloc(0),
           code: 0,
         };
       }
-      if (args[0] === "inspect" && args.at(-1) === "openclaw-sbx-browser-missing-hash") {
+      if (args[0] === "inspect" && args.at(-1) === "mioclaw-sbx-browser-missing-hash") {
         return {
           stdout: Buffer.from("<no value>\t<no value>\n"),
           stderr: Buffer.alloc(0),
@@ -788,7 +788,7 @@ description: test skill
     const staleEpoch = res.findings.find(
       (f) => f.checkId === "sandbox.browser_container.hash_epoch_stale",
     );
-    expect(staleEpoch?.detail).toContain("openclaw-sbx-browser-old");
+    expect(staleEpoch?.detail).toContain("mioclaw-sbx-browser-old");
   });
 
   it("skips sandbox browser hash label checks when docker inspect is unavailable", async () => {
@@ -819,19 +819,19 @@ description: test skill
     const execDockerRawFn = (async (args: string[]) => {
       if (args[0] === "ps") {
         return {
-          stdout: Buffer.from("openclaw-sbx-browser-exposed\n"),
+          stdout: Buffer.from("mioclaw-sbx-browser-exposed\n"),
           stderr: Buffer.alloc(0),
           code: 0,
         };
       }
-      if (args[0] === "inspect" && args.at(-1) === "openclaw-sbx-browser-exposed") {
+      if (args[0] === "inspect" && args.at(-1) === "mioclaw-sbx-browser-exposed") {
         return {
           stdout: Buffer.from("hash123\t2026-02-21-novnc-auth-default\n"),
           stderr: Buffer.alloc(0),
           code: 0,
         };
       }
-      if (args[0] === "port" && args.at(-1) === "openclaw-sbx-browser-exposed") {
+      if (args[0] === "port" && args.at(-1) === "mioclaw-sbx-browser-exposed") {
         return {
           stdout: Buffer.from("6080/tcp -> 0.0.0.0:49101\n9222/tcp -> 127.0.0.1:49100\n"),
           stderr: Buffer.alloc(0),
@@ -868,11 +868,11 @@ description: test skill
     const stateDir = path.join(tmp, "state");
     await fs.mkdir(stateDir, { recursive: true, mode: 0o700 });
 
-    const targetConfigPath = path.join(tmp, "managed-openclaw.json");
+    const targetConfigPath = path.join(tmp, "managed-mioclaw.json");
     await fs.writeFile(targetConfigPath, "{}\n", "utf-8");
     await fs.chmod(targetConfigPath, 0o444);
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "mioclaw.json");
     await fs.symlink(targetConfigPath, configPath);
 
     const res = await runSecurityAudit({
@@ -909,7 +909,7 @@ description: test skill
     await fs.writeFile(outsideSkillPath, "# outside\n", "utf-8");
     await fs.symlink(outsideSkillPath, path.join(workspaceDir, "skills", "leak", "SKILL.md"));
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "mioclaw.json");
     await fs.writeFile(configPath, "{}\n", "utf-8");
     await fs.chmod(configPath, 0o600);
 
@@ -939,7 +939,7 @@ description: test skill
       "utf-8",
     );
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "mioclaw.json");
     await fs.writeFile(configPath, "{}\n", "utf-8");
     if (!isWindows) {
       await fs.chmod(configPath, 0o600);
@@ -2183,9 +2183,7 @@ description: test skill
       expect(finding?.detail).toContain(
         "channels.discord.guilds.123.channels.general.users:security-team",
       );
-      expect(finding?.detail).toContain(
-        "~/.openclaw/credentials/discord-allowFrom.json:team.owner",
-      );
+      expect(finding?.detail).toContain("~/.mioclaw/credentials/discord-allowFrom.json:team.owner");
       expect(finding?.detail).not.toContain("<@123456789012345678>");
     });
   });
@@ -2916,8 +2914,8 @@ description: test skill
     const cfg: OpenClawConfig = {};
 
     const res = await audit(cfg, {
-      stateDir: "/Users/test/Dropbox/.openclaw",
-      configPath: "/Users/test/Dropbox/.openclaw/openclaw.json",
+      stateDir: "/Users/test/Dropbox/.mioclaw",
+      configPath: "/Users/test/Dropbox/.mioclaw/mioclaw.json",
     });
 
     expectFinding(res, "fs.synced_dir", "warn");
@@ -2938,7 +2936,7 @@ description: test skill
       await fs.chmod(includePath, 0o644);
     }
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "mioclaw.json");
     await fs.writeFile(configPath, `{ "$include": "./extra.json5" }\n`, "utf-8");
     await fs.chmod(configPath, 0o600);
 
@@ -3002,7 +3000,7 @@ description: test skill
         includeFilesystem: true,
         includeChannelSecurity: false,
         stateDir,
-        configPath: path.join(stateDir, "openclaw.json"),
+        configPath: path.join(stateDir, "mioclaw.json"),
         execDockerRawFn: execDockerRawUnavailable,
       });
 
@@ -3041,7 +3039,7 @@ description: test skill
         installs: {
           "voice-call": {
             source: "npm",
-            spec: "@openclaw/voice-call",
+            spec: "@mioclaw/voice-call",
           },
         },
       },
@@ -3050,7 +3048,7 @@ description: test skill
           installs: {
             "test-hooks": {
               source: "npm",
-              spec: "@openclaw/test-hooks",
+              spec: "@mioclaw/test-hooks",
             },
           },
         },
@@ -3062,7 +3060,7 @@ description: test skill
       includeFilesystem: true,
       includeChannelSecurity: false,
       stateDir: sharedInstallMetadataStateDir,
-      configPath: path.join(sharedInstallMetadataStateDir, "openclaw.json"),
+      configPath: path.join(sharedInstallMetadataStateDir, "mioclaw.json"),
       execDockerRawFn: execDockerRawUnavailable,
     });
 
@@ -3078,7 +3076,7 @@ description: test skill
         installs: {
           "voice-call": {
             source: "npm",
-            spec: "@openclaw/voice-call@1.2.3",
+            spec: "@mioclaw/voice-call@1.2.3",
             integrity: "sha512-plugin",
           },
         },
@@ -3088,7 +3086,7 @@ description: test skill
           installs: {
             "test-hooks": {
               source: "npm",
-              spec: "@openclaw/test-hooks@1.2.3",
+              spec: "@mioclaw/test-hooks@1.2.3",
               integrity: "sha512-hook",
             },
           },
@@ -3101,7 +3099,7 @@ description: test skill
       includeFilesystem: true,
       includeChannelSecurity: false,
       stateDir: sharedInstallMetadataStateDir,
-      configPath: path.join(sharedInstallMetadataStateDir, "openclaw.json"),
+      configPath: path.join(sharedInstallMetadataStateDir, "mioclaw.json"),
       execDockerRawFn: execDockerRawUnavailable,
     });
 
@@ -3120,12 +3118,12 @@ description: test skill
     await fs.mkdir(hookDir, { recursive: true });
     await fs.writeFile(
       path.join(pluginDir, "package.json"),
-      JSON.stringify({ name: "@openclaw/voice-call", version: "9.9.9" }),
+      JSON.stringify({ name: "@mioclaw/voice-call", version: "9.9.9" }),
       "utf-8",
     );
     await fs.writeFile(
       path.join(hookDir, "package.json"),
-      JSON.stringify({ name: "@openclaw/test-hooks", version: "8.8.8" }),
+      JSON.stringify({ name: "@mioclaw/test-hooks", version: "8.8.8" }),
       "utf-8",
     );
 
@@ -3134,7 +3132,7 @@ description: test skill
         installs: {
           "voice-call": {
             source: "npm",
-            spec: "@openclaw/voice-call@1.2.3",
+            spec: "@mioclaw/voice-call@1.2.3",
             integrity: "sha512-plugin",
             resolvedVersion: "1.2.3",
           },
@@ -3145,7 +3143,7 @@ description: test skill
           installs: {
             "test-hooks": {
               source: "npm",
-              spec: "@openclaw/test-hooks@1.2.3",
+              spec: "@mioclaw/test-hooks@1.2.3",
               integrity: "sha512-hook",
               resolvedVersion: "1.2.3",
             },
@@ -3159,7 +3157,7 @@ description: test skill
       includeFilesystem: true,
       includeChannelSecurity: false,
       stateDir,
-      configPath: path.join(stateDir, "openclaw.json"),
+      configPath: path.join(stateDir, "mioclaw.json"),
       execDockerRawFn: execDockerRawUnavailable,
     });
 
@@ -3178,7 +3176,7 @@ description: test skill
       includeFilesystem: true,
       includeChannelSecurity: false,
       stateDir,
-      configPath: path.join(stateDir, "openclaw.json"),
+      configPath: path.join(stateDir, "mioclaw.json"),
       execDockerRawFn: execDockerRawUnavailable,
     });
 
@@ -3204,7 +3202,7 @@ description: test skill
       includeFilesystem: true,
       includeChannelSecurity: false,
       stateDir,
-      configPath: path.join(stateDir, "openclaw.json"),
+      configPath: path.join(stateDir, "mioclaw.json"),
       execDockerRawFn: execDockerRawUnavailable,
     });
 
@@ -3229,7 +3227,7 @@ description: test skill
         includeFilesystem: true,
         includeChannelSecurity: false,
         stateDir,
-        configPath: path.join(stateDir, "openclaw.json"),
+        configPath: path.join(stateDir, "mioclaw.json"),
         execDockerRawFn: execDockerRawUnavailable,
       });
 
@@ -3273,7 +3271,7 @@ description: test skill
         includeFilesystem: true,
         includeChannelSecurity: false,
         stateDir,
-        configPath: path.join(stateDir, "openclaw.json"),
+        configPath: path.join(stateDir, "mioclaw.json"),
         execDockerRawFn: execDockerRawUnavailable,
       });
 
@@ -3341,7 +3339,7 @@ description: test skill
       path.join(pluginDir, "package.json"),
       JSON.stringify({
         name: "escape-plugin",
-        openclaw: { extensions: ["../outside.js"] },
+        mioclaw: { extensions: ["../outside.js"] },
       }),
     );
     await fs.writeFile(path.join(pluginDir, "index.js"), "export {};");
@@ -3363,7 +3361,7 @@ description: test skill
         path.join(pluginDir, "package.json"),
         JSON.stringify({
           name: "scanfail-plugin",
-          openclaw: { extensions: ["index.js"] },
+          mioclaw: { extensions: ["index.js"] },
         }),
       );
       await fs.writeFile(path.join(pluginDir, "index.js"), "export {};");

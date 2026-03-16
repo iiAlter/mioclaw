@@ -135,7 +135,7 @@ describe("isSystemdServiceEnabled", () => {
       err.code = "EACCES";
       cb(err, "", "");
     });
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } });
+    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } });
     expect(result).toBe(false);
   });
 
@@ -145,7 +145,7 @@ describe("isSystemdServiceEnabled", () => {
     err.code = "ENOENT";
     vi.spyOn(fs, "access").mockRejectedValueOnce(err);
 
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } });
+    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } });
 
     expect(result).toBe(false);
     expect(execFileMock).not.toHaveBeenCalled();
@@ -158,7 +158,7 @@ describe("isSystemdServiceEnabled", () => {
       expect(args).toEqual(["--user", "is-enabled", "mioclaw-gateway.service"]);
       cb(null, "enabled", "");
     });
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } });
+    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } });
     expect(result).toBe(true);
   });
 
@@ -170,7 +170,7 @@ describe("isSystemdServiceEnabled", () => {
       err.code = 1;
       cb(err, "disabled", "");
     });
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } });
+    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } });
     expect(result).toBe(false);
   });
 
@@ -187,7 +187,7 @@ describe("isSystemdServiceEnabled", () => {
     });
 
     await expect(
-      isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } }),
+      isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } }),
     ).rejects.toThrow(
       "systemctl is-enabled unavailable: Command failed: systemctl --user is-enabled mioclaw-gateway.service",
     );
@@ -210,7 +210,7 @@ describe("isSystemdServiceEnabled", () => {
 
     await expect(
       isSystemdServiceEnabled({
-        env: { HOME: "/tmp/openclaw-test-home", USER: "", LOGNAME: "" },
+        env: { HOME: "/tmp/mioclaw-test-home", USER: "", LOGNAME: "" },
       }),
     ).rejects.toThrow("systemctl is-enabled unavailable: Failed to connect to bus");
   });
@@ -247,7 +247,7 @@ describe("isSystemdServiceEnabled", () => {
 
     await expect(
       isSystemdServiceEnabled({
-        env: { HOME: "/tmp/openclaw-test-home", USER: "debian" },
+        env: { HOME: "/tmp/mioclaw-test-home", USER: "debian" },
       }),
     ).rejects.toThrow("systemctl is-enabled unavailable: Failed to connect to user scope bus");
   });
@@ -265,7 +265,7 @@ describe("isSystemdServiceEnabled", () => {
     });
 
     await expect(
-      isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } }),
+      isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } }),
     ).rejects.toThrow("systemctl is-enabled unavailable: read-only file system");
   });
 
@@ -288,7 +288,7 @@ describe("isSystemdServiceEnabled", () => {
         cb(err, "", "permission denied");
       });
     await expect(
-      isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } }),
+      isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } }),
     ).rejects.toThrow("systemctl is-enabled unavailable: permission denied");
   });
 
@@ -304,7 +304,7 @@ describe("isSystemdServiceEnabled", () => {
       err.code = 4;
       cb(err, "not-found\n", "");
     });
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/openclaw-test-home" } });
+    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/mioclaw-test-home" } });
     expect(result).toBe(false);
   });
 });
@@ -412,8 +412,8 @@ describe("resolveSystemdUserUnitPath", () => {
 
 describe("splitArgsPreservingQuotes", () => {
   it("splits on whitespace outside quotes", () => {
-    expect(splitArgsPreservingQuotes('/usr/bin/openclaw gateway start --name "My Bot"')).toEqual([
-      "/usr/bin/openclaw",
+    expect(splitArgsPreservingQuotes('/usr/bin/mioclaw gateway start --name "My Bot"')).toEqual([
+      "/usr/bin/mioclaw",
       "gateway",
       "start",
       "--name",
@@ -423,32 +423,32 @@ describe("splitArgsPreservingQuotes", () => {
 
   it("supports systemd-style backslash escaping", () => {
     expect(
-      splitArgsPreservingQuotes('openclaw --name "My \\"Bot\\"" --foo bar', {
+      splitArgsPreservingQuotes('mioclaw --name "My \\"Bot\\"" --foo bar', {
         escapeMode: "backslash",
       }),
-    ).toEqual(["openclaw", "--name", 'My "Bot"', "--foo", "bar"]);
+    ).toEqual(["mioclaw", "--name", 'My "Bot"', "--foo", "bar"]);
   });
 
   it("supports schtasks-style escaped quotes while preserving other backslashes", () => {
     expect(
-      splitArgsPreservingQuotes('openclaw --path "C:\\\\Program Files\\\\OpenClaw"', {
+      splitArgsPreservingQuotes('mioclaw --path "C:\\\\Program Files\\\\Mioclaw"', {
         escapeMode: "backslash-quote-only",
       }),
-    ).toEqual(["openclaw", "--path", "C:\\\\Program Files\\\\OpenClaw"]);
+    ).toEqual(["mioclaw", "--path", "C:\\\\Program Files\\\\Mioclaw"]);
 
     expect(
-      splitArgsPreservingQuotes('openclaw --label "My \\"Quoted\\" Name"', {
+      splitArgsPreservingQuotes('mioclaw --label "My \\"Quoted\\" Name"', {
         escapeMode: "backslash-quote-only",
       }),
-    ).toEqual(["openclaw", "--label", 'My "Quoted" Name']);
+    ).toEqual(["mioclaw", "--label", 'My "Quoted" Name']);
   });
 });
 
 describe("parseSystemdExecStart", () => {
   it("preserves quoted arguments", () => {
-    const execStart = '/usr/bin/openclaw gateway start --name "My Bot"';
+    const execStart = '/usr/bin/mioclaw gateway start --name "My Bot"';
     expect(parseSystemdExecStart(execStart)).toEqual([
-      "/usr/bin/openclaw",
+      "/usr/bin/mioclaw",
       "gateway",
       "start",
       "--name",
@@ -468,11 +468,11 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/mioclaw-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
-          "EnvironmentFile=%h/.openclaw/.env",
+          "ExecStart=/usr/bin/mioclaw gateway run",
+          "EnvironmentFile=%h/.mioclaw/.env",
         ].join("\n");
       }
-      if (pathValue === "/home/test/.openclaw/.env") {
+      if (pathValue === "/home/test/.mioclaw/.env") {
         return "OPENCLAW_GATEWAY_TOKEN=env-file-token\n";
       }
       throw new Error(`unexpected readFile path: ${pathValue}`);
@@ -489,12 +489,12 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/mioclaw-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
-          "EnvironmentFile=%h/.openclaw/.env",
+          "ExecStart=/usr/bin/mioclaw gateway run",
+          "EnvironmentFile=%h/.mioclaw/.env",
           'Environment="OPENCLAW_GATEWAY_TOKEN=inline-token"',
         ].join("\n");
       }
-      if (pathValue === "/home/test/.openclaw/.env") {
+      if (pathValue === "/home/test/.mioclaw/.env") {
         return "OPENCLAW_GATEWAY_TOKEN=env-file-token\n";
       }
       throw new Error(`unexpected readFile path: ${pathValue}`);
@@ -511,15 +511,15 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/mioclaw-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
-          "EnvironmentFile=-%h/.openclaw/missing.env",
+          "ExecStart=/usr/bin/mioclaw gateway run",
+          "EnvironmentFile=-%h/.mioclaw/missing.env",
         ].join("\n");
       }
       throw new Error(`missing: ${pathValue}`);
     });
 
     const command = await readSystemdServiceExecStart({ HOME: "/home/test" });
-    expect(command?.programArguments).toEqual(["/usr/bin/openclaw", "gateway", "run"]);
+    expect(command?.programArguments).toEqual(["/usr/bin/mioclaw", "gateway", "run"]);
     expect(command?.environment).toBeUndefined();
   });
 
@@ -529,15 +529,15 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/mioclaw-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
-          "EnvironmentFile=%h/.openclaw/missing.env",
+          "ExecStart=/usr/bin/mioclaw gateway run",
+          "EnvironmentFile=%h/.mioclaw/missing.env",
         ].join("\n");
       }
       throw new Error(`missing: ${pathValue}`);
     });
 
     const command = await readSystemdServiceExecStart({ HOME: "/home/test" });
-    expect(command?.programArguments).toEqual(["/usr/bin/openclaw", "gateway", "run"]);
+    expect(command?.programArguments).toEqual(["/usr/bin/mioclaw", "gateway", "run"]);
     expect(command?.environment).toBeUndefined();
   });
 
@@ -547,14 +547,14 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/mioclaw-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
-          'EnvironmentFile=%h/.openclaw/first.env "%h/.openclaw/second env.env"',
+          "ExecStart=/usr/bin/mioclaw gateway run",
+          'EnvironmentFile=%h/.mioclaw/first.env "%h/.mioclaw/second env.env"',
         ].join("\n");
       }
-      if (pathValue === "/home/test/.openclaw/first.env") {
+      if (pathValue === "/home/test/.mioclaw/first.env") {
         return "OPENCLAW_GATEWAY_TOKEN=first-token\n"; // pragma: allowlist secret
       }
-      if (pathValue === "/home/test/.openclaw/second env.env") {
+      if (pathValue === "/home/test/.mioclaw/second env.env") {
         return 'OPENCLAW_GATEWAY_PASSWORD="second password"\n'; // pragma: allowlist secret
       }
       throw new Error(`unexpected readFile path: ${pathValue}`);
@@ -573,7 +573,7 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/mioclaw-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
+          "ExecStart=/usr/bin/mioclaw gateway run",
           "EnvironmentFile=./gateway.env ./override.env",
         ].join("\n");
       }
@@ -602,11 +602,11 @@ describe("readSystemdServiceExecStart", () => {
       if (pathValue.endsWith("/mioclaw-gateway.service")) {
         return [
           "[Service]",
-          "ExecStart=/usr/bin/openclaw gateway run",
-          "EnvironmentFile=%h/.openclaw/gateway.env",
+          "ExecStart=/usr/bin/mioclaw gateway run",
+          "EnvironmentFile=%h/.mioclaw/gateway.env",
         ].join("\n");
       }
-      if (pathValue === "/home/test/.openclaw/gateway.env") {
+      if (pathValue === "/home/test/.mioclaw/gateway.env") {
         return [
           "# comment",
           "; another comment",

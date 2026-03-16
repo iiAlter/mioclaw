@@ -168,7 +168,7 @@ export async function promptSecretRefForOnboarding(params: {
       });
       await params.prompter.note(
         params.copy?.envValidatedMessage?.(envVar) ??
-          `Validated environment variable ${envVar}. OpenClaw will store a reference, not the key value.`,
+          `Validated environment variable ${envVar}. Mioclaw will store a reference, not the key value.`,
         "Reference validated",
       );
       return { ref, resolvedValue };
@@ -259,7 +259,7 @@ export async function promptSecretRefForOnboarding(params: {
       });
       await params.prompter.note(
         params.copy?.providerValidatedMessage?.(selectedProvider, id, providerEntry.source) ??
-          `Validated ${providerEntry.source} reference ${selectedProvider}:${id}. OpenClaw will store a reference, not the key value.`,
+          `Validated ${providerEntry.source} reference ${selectedProvider}:${id}. Mioclaw will store a reference, not the key value.`,
         "Reference validated",
       );
       return { ref, resolvedValue };
@@ -400,7 +400,7 @@ export async function resolveSecretInputModeForEnvSelection(params: {
       {
         value: "plaintext",
         label: params.copy?.plaintextLabel ?? "Paste API key now",
-        hint: params.copy?.plaintextHint ?? "Stores the key directly in OpenClaw config",
+        hint: params.copy?.plaintextHint ?? "Stores the key directly in Mioclaw config",
       },
       {
         value: "ref",

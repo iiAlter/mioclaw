@@ -2,7 +2,7 @@
  * Twitch channel plugin types.
  *
  * This file defines Twitch-specific types. Generic channel types are imported
- * from OpenClaw core.
+ * from Mioclaw core.
  */
 
 import type {
@@ -22,7 +22,7 @@ import type {
   OpenClawConfig,
   OutboundDeliveryResult,
   RuntimeEnv,
-} from "openclaw/plugin-sdk/twitch";
+} from "mioclaw/plugin-sdk/twitch";
 
 // ============================================================================
 // Twitch-Specific Types

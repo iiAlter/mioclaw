@@ -20,7 +20,7 @@ import type {
 // dispatchGatewayMethod can use it as a fallback.
 
 const FALLBACK_GATEWAY_CONTEXT_STATE_KEY: unique symbol = Symbol.for(
-  "openclaw.fallbackGatewayContextState",
+  "mioclaw.fallbackGatewayContextState",
 );
 
 type FallbackGatewayContextState = {

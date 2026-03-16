@@ -1,7 +1,7 @@
 import { join, parse } from "node:path";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("openclaw/plugin-sdk/google-gemini-cli-auth", () => ({
+vi.mock("mioclaw/plugin-sdk/google-gemini-cli-auth", () => ({
   isWSL2Sync: () => false,
   fetchWithSsrFGuard: async (params: {
     url: string;
@@ -341,7 +341,7 @@ describe("loginGeminiCliOAuth", () => {
         });
       }
       if (url === USERINFO_URL) {
-        return responseJson({ email: "lobster@openclaw.ai" });
+        return responseJson({ email: "lobster@mioclaw.ai" });
       }
       if (url === LOAD_PROD) {
         return responseJson({ error: { message: "temporary failure" } }, 503);
@@ -404,7 +404,7 @@ describe("loginGeminiCliOAuth", () => {
         });
       }
       if (url === USERINFO_URL) {
-        return responseJson({ email: "lobster@openclaw.ai" });
+        return responseJson({ email: "lobster@mioclaw.ai" });
       }
       if ([LOAD_PROD, LOAD_DAILY, LOAD_AUTOPUSH].includes(url)) {
         return responseJson({ error: { message: "unavailable" } }, 503);

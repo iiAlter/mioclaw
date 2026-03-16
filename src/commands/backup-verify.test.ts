@@ -12,7 +12,7 @@ describe("backupVerifyCommand", () => {
   let tempHome: TempHomeEnv;
 
   beforeEach(async () => {
-    tempHome = await createTempHomeEnv("openclaw-backup-verify-test-");
+    tempHome = await createTempHomeEnv("mioclaw-backup-verify-test-");
   });
 
   afterEach(async () => {
@@ -20,10 +20,10 @@ describe("backupVerifyCommand", () => {
   });
 
   it("verifies an archive created by backup create", async () => {
-    const stateDir = path.join(tempHome.home, ".openclaw");
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-verify-out-"));
+    const stateDir = path.join(tempHome.home, ".mioclaw");
+    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-verify-out-"));
     try {
-      await fs.writeFile(path.join(stateDir, "openclaw.json"), JSON.stringify({}), "utf8");
+      await fs.writeFile(path.join(stateDir, "mioclaw.json"), JSON.stringify({}), "utf8");
       await fs.writeFile(path.join(stateDir, "state.txt"), "hello\n", "utf8");
 
       const runtime = {
@@ -45,7 +45,7 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the archive does not contain a manifest", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-no-manifest-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-no-manifest-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     try {
       const root = path.join(tempDir, "root");
@@ -68,10 +68,10 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the manifest references a missing asset payload", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-missing-asset-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-missing-asset-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     try {
-      const rootName = "2026-03-09T00-00-00.000Z-openclaw-backup";
+      const rootName = "2026-03-09T00-00-00.000Z-mioclaw-backup";
       const root = path.join(tempDir, rootName);
       await fs.mkdir(root, { recursive: true });
       const manifest = {
@@ -84,8 +84,8 @@ describe("backupVerifyCommand", () => {
         assets: [
           {
             kind: "state",
-            sourcePath: "/tmp/.openclaw",
-            archivePath: `${rootName}/payload/posix/tmp/.openclaw`,
+            sourcePath: "/tmp/.mioclaw",
+            archivePath: `${rootName}/payload/posix/tmp/.mioclaw`,
           },
         ],
       };
@@ -110,12 +110,12 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when archive paths contain traversal segments", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-traversal-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-traversal-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     const manifestPath = path.join(tempDir, "manifest.json");
     const payloadPath = path.join(tempDir, "payload.txt");
     try {
-      const rootName = "2026-03-09T00-00-00.000Z-openclaw-backup";
+      const rootName = "2026-03-09T00-00-00.000Z-mioclaw-backup";
       const traversalPath = `${rootName}/payload/../escaped.txt`;
       const manifest = {
         schemaVersion: 1,
@@ -127,7 +127,7 @@ describe("backupVerifyCommand", () => {
         assets: [
           {
             kind: "state",
-            sourcePath: "/tmp/.openclaw",
+            sourcePath: "/tmp/.mioclaw",
             archivePath: traversalPath,
           },
         ],
@@ -168,12 +168,12 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when archive paths contain backslashes", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-backslash-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-backslash-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     const manifestPath = path.join(tempDir, "manifest.json");
     const payloadPath = path.join(tempDir, "payload.txt");
     try {
-      const rootName = "2026-03-09T00-00-00.000Z-openclaw-backup";
+      const rootName = "2026-03-09T00-00-00.000Z-mioclaw-backup";
       const invalidPath = `${rootName}/payload\\..\\escaped.txt`;
       const manifest = {
         schemaVersion: 1,
@@ -185,7 +185,7 @@ describe("backupVerifyCommand", () => {
         assets: [
           {
             kind: "state",
-            sourcePath: "/tmp/.openclaw",
+            sourcePath: "/tmp/.mioclaw",
             archivePath: invalidPath,
           },
         ],
@@ -226,10 +226,10 @@ describe("backupVerifyCommand", () => {
   });
 
   it("ignores payload manifest.json files when locating the backup manifest", async () => {
-    const stateDir = path.join(tempHome.home, ".openclaw");
-    const externalWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-workspace-"));
+    const stateDir = path.join(tempHome.home, ".mioclaw");
+    const externalWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-workspace-"));
     const configPath = path.join(tempHome.home, "custom-config.json");
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-verify-out-"));
+    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-verify-out-"));
     try {
       process.env.OPENCLAW_CONFIG_PATH = configPath;
       await fs.writeFile(
@@ -243,7 +243,7 @@ describe("backupVerifyCommand", () => {
         }),
         "utf8",
       );
-      await fs.writeFile(path.join(stateDir, "openclaw.json"), JSON.stringify({}), "utf8");
+      await fs.writeFile(path.join(stateDir, "mioclaw.json"), JSON.stringify({}), "utf8");
       await fs.writeFile(path.join(stateDir, "state.txt"), "hello\n", "utf8");
       await fs.writeFile(
         path.join(externalWorkspace, "manifest.json"),
@@ -274,12 +274,12 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the archive contains duplicate root manifest entries", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-duplicate-manifest-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-duplicate-manifest-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     const manifestPath = path.join(tempDir, "manifest.json");
     const payloadPath = path.join(tempDir, "payload.txt");
     try {
-      const rootName = "2026-03-09T00-00-00.000Z-openclaw-backup";
+      const rootName = "2026-03-09T00-00-00.000Z-mioclaw-backup";
       const manifest = {
         schemaVersion: 1,
         createdAt: "2026-03-09T00:00:00.000Z",
@@ -290,8 +290,8 @@ describe("backupVerifyCommand", () => {
         assets: [
           {
             kind: "state",
-            sourcePath: "/tmp/.openclaw",
-            archivePath: `${rootName}/payload/posix/tmp/.openclaw/payload.txt`,
+            sourcePath: "/tmp/.mioclaw",
+            archivePath: `${rootName}/payload/posix/tmp/.mioclaw/payload.txt`,
           },
         ],
       };
@@ -309,7 +309,7 @@ describe("backupVerifyCommand", () => {
               return;
             }
             if (entry.path === payloadPath) {
-              entry.path = `${rootName}/payload/posix/tmp/.openclaw/payload.txt`;
+              entry.path = `${rootName}/payload/posix/tmp/.mioclaw/payload.txt`;
             }
           },
         },
@@ -331,14 +331,14 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the archive contains duplicate payload entries", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-backup-duplicate-payload-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-backup-duplicate-payload-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     const manifestPath = path.join(tempDir, "manifest.json");
     const payloadPathA = path.join(tempDir, "payload-a.txt");
     const payloadPathB = path.join(tempDir, "payload-b.txt");
     try {
-      const rootName = "2026-03-09T00-00-00.000Z-openclaw-backup";
-      const payloadArchivePath = `${rootName}/payload/posix/tmp/.openclaw/payload.txt`;
+      const rootName = "2026-03-09T00-00-00.000Z-mioclaw-backup";
+      const payloadArchivePath = `${rootName}/payload/posix/tmp/.mioclaw/payload.txt`;
       const manifest = {
         schemaVersion: 1,
         createdAt: "2026-03-09T00:00:00.000Z",
@@ -349,7 +349,7 @@ describe("backupVerifyCommand", () => {
         assets: [
           {
             kind: "state",
-            sourcePath: "/tmp/.openclaw",
+            sourcePath: "/tmp/.mioclaw",
             archivePath: payloadArchivePath,
           },
         ],

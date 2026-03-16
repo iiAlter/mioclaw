@@ -83,7 +83,7 @@ describe("inspectTelegramAccount SecretRef resolution", () => {
   it.runIf(process.platform !== "win32")(
     "treats symlinked token files as configured_unavailable",
     () => {
-      const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-inspect-"));
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-telegram-inspect-"));
       const tokenFile = path.join(dir, "token.txt");
       const tokenLink = path.join(dir, "token-link.txt");
       fs.writeFileSync(tokenFile, "123:token\n", "utf8");

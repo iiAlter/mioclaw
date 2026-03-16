@@ -236,7 +236,7 @@ export function normalizeGoogleModelId(id: string): string {
   if (id === "gemini-3.1-flash-lite") {
     return "gemini-3.1-flash-lite-preview";
   }
-  // Preserve compatibility with earlier OpenClaw docs/config that pointed at a
+  // Preserve compatibility with earlier Mioclaw docs/config that pointed at a
   // non-existent Gemini Flash preview ID. Google's current Flash text model is
   // `gemini-3-flash-preview`.
   if (id === "gemini-3.1-flash" || id === "gemini-3.1-flash-preview") {
@@ -955,7 +955,7 @@ export async function resolveImplicitCopilotProvider(params: {
   }
 
   // We deliberately do not write pi-coding-agent auth.json here.
-  // OpenClaw keeps auth in auth-profiles and resolves runtime availability from that store.
+  // Mioclaw keeps auth in auth-profiles and resolves runtime availability from that store.
 
   // We intentionally do NOT define custom models for Copilot in models.json.
   // pi-coding-agent treats providers with models as replacements requiring apiKey.

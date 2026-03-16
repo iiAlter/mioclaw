@@ -22,7 +22,7 @@ function winRuntime(env: NodeJS.ProcessEnv) {
 }
 
 async function createTempDir(): Promise<string> {
-  const dir = await mkdtemp(path.join(tmpdir(), "openclaw-acpx-process-test-"));
+  const dir = await mkdtemp(path.join(tmpdir(), "mioclaw-acpx-process-test-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -301,7 +301,7 @@ describe("spawnAndCollect", () => {
       command: process.execPath,
       args: [
         "-e",
-        "process.stdout.write(JSON.stringify({openai:process.env.OPENAI_API_KEY,github:process.env.GITHUB_TOKEN,hf:process.env.HF_TOKEN,openclaw:process.env.OPENCLAW_API_KEY,shell:process.env.OPENCLAW_SHELL}))",
+        "process.stdout.write(JSON.stringify({openai:process.env.OPENAI_API_KEY,github:process.env.GITHUB_TOKEN,hf:process.env.HF_TOKEN,mioclaw:process.env.OPENCLAW_API_KEY,shell:process.env.OPENCLAW_SHELL}))",
       ],
       cwd: process.cwd(),
       stripProviderAuthEnvVars: true,
@@ -314,13 +314,13 @@ describe("spawnAndCollect", () => {
       openai?: string;
       github?: string;
       hf?: string;
-      openclaw?: string;
+      mioclaw?: string;
       shell?: string;
     };
     expect(parsed.openai).toBeUndefined();
     expect(parsed.github).toBeUndefined();
     expect(parsed.hf).toBeUndefined();
-    expect(parsed.openclaw).toBe("keep-me");
+    expect(parsed.mioclaw).toBe("keep-me");
     expect(parsed.shell).toBe("acp");
   });
 
@@ -333,7 +333,7 @@ describe("spawnAndCollect", () => {
       command: process.execPath,
       args: [
         "-e",
-        "process.stdout.write(JSON.stringify({openai:process.env.OpenAI_Api_Key,github:process.env.Github_Token,openclaw:process.env.OPENCLAW_API_KEY,shell:process.env.OPENCLAW_SHELL}))",
+        "process.stdout.write(JSON.stringify({openai:process.env.OpenAI_Api_Key,github:process.env.Github_Token,mioclaw:process.env.OPENCLAW_API_KEY,shell:process.env.OPENCLAW_SHELL}))",
       ],
       cwd: process.cwd(),
       stripProviderAuthEnvVars: true,
@@ -345,12 +345,12 @@ describe("spawnAndCollect", () => {
     const parsed = JSON.parse(result.stdout) as {
       openai?: string;
       github?: string;
-      openclaw?: string;
+      mioclaw?: string;
       shell?: string;
     };
     expect(parsed.openai).toBeUndefined();
     expect(parsed.github).toBeUndefined();
-    expect(parsed.openclaw).toBe("keep-me");
+    expect(parsed.mioclaw).toBe("keep-me");
     expect(parsed.shell).toBe("acp");
   });
 
@@ -364,7 +364,7 @@ describe("spawnAndCollect", () => {
       command: process.execPath,
       args: [
         "-e",
-        "process.stdout.write(JSON.stringify({openai:process.env.OPENAI_API_KEY,github:process.env.GITHUB_TOKEN,hf:process.env.HF_TOKEN,openclaw:process.env.OPENCLAW_API_KEY,shell:process.env.OPENCLAW_SHELL}))",
+        "process.stdout.write(JSON.stringify({openai:process.env.OPENAI_API_KEY,github:process.env.GITHUB_TOKEN,hf:process.env.HF_TOKEN,mioclaw:process.env.OPENCLAW_API_KEY,shell:process.env.OPENCLAW_SHELL}))",
       ],
       cwd: process.cwd(),
     });
@@ -376,13 +376,13 @@ describe("spawnAndCollect", () => {
       openai?: string;
       github?: string;
       hf?: string;
-      openclaw?: string;
+      mioclaw?: string;
       shell?: string;
     };
     expect(parsed.openai).toBe("openai-secret");
     expect(parsed.github).toBe("gh-secret");
     expect(parsed.hf).toBe("hf-secret");
-    expect(parsed.openclaw).toBe("keep-me");
+    expect(parsed.mioclaw).toBe("keep-me");
     expect(parsed.shell).toBe("acp");
   });
 });

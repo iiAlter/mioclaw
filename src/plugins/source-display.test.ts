@@ -11,11 +11,11 @@ describe("formatPluginSourceForTable", () => {
       "homebrew",
       "lib",
       "node_modules",
-      "openclaw",
+      "mioclaw",
       "extensions",
     );
-    const globalRoot = path.resolve(path.sep, "Users", "x", ".openclaw", "extensions");
-    const workspaceRoot = path.resolve(path.sep, "Users", "x", "ws", ".openclaw", "extensions");
+    const globalRoot = path.resolve(path.sep, "Users", "x", ".mioclaw", "extensions");
+    const workspaceRoot = path.resolve(path.sep, "Users", "x", "ws", ".mioclaw", "extensions");
     const out = formatPluginSourceForTable(
       {
         origin: "bundled",
@@ -38,11 +38,11 @@ describe("formatPluginSourceForTable", () => {
       "homebrew",
       "lib",
       "node_modules",
-      "openclaw",
+      "mioclaw",
       "extensions",
     );
-    const globalRoot = path.resolve(path.sep, "Users", "x", ".openclaw", "extensions");
-    const workspaceRoot = path.resolve(path.sep, "Users", "x", "ws", ".openclaw", "extensions");
+    const globalRoot = path.resolve(path.sep, "Users", "x", ".mioclaw", "extensions");
+    const workspaceRoot = path.resolve(path.sep, "Users", "x", "ws", ".mioclaw", "extensions");
     const out = formatPluginSourceForTable(
       {
         origin: "workspace",
@@ -65,11 +65,11 @@ describe("formatPluginSourceForTable", () => {
       "homebrew",
       "lib",
       "node_modules",
-      "openclaw",
+      "mioclaw",
       "extensions",
     );
-    const globalRoot = path.resolve(path.sep, "Users", "x", ".openclaw", "extensions");
-    const workspaceRoot = path.resolve(path.sep, "Users", "x", "ws", ".openclaw", "extensions");
+    const globalRoot = path.resolve(path.sep, "Users", "x", ".mioclaw", "extensions");
+    const workspaceRoot = path.resolve(path.sep, "Users", "x", "ws", ".mioclaw", "extensions");
     const out = formatPluginSourceForTable(
       {
         origin: "global",
@@ -87,7 +87,7 @@ describe("formatPluginSourceForTable", () => {
 
   it("resolves source roots from an explicit env override", () => {
     const ignoredHome = path.resolve(path.sep, "tmp", "ignored-home");
-    const homeDir = path.resolve(path.sep, "tmp", "openclaw-home");
+    const homeDir = path.resolve(path.sep, "tmp", "mioclaw-home");
     const roots = withEnv(
       {
         OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(ignoredHome, "ignored-bundled"),
@@ -109,7 +109,7 @@ describe("formatPluginSourceForTable", () => {
     expect(roots).toEqual({
       stock: path.join(homeDir, "bundled"),
       global: path.join(homeDir, "state", "extensions"),
-      workspace: path.join(homeDir, "ws", ".openclaw", "extensions"),
+      workspace: path.join(homeDir, "ws", ".mioclaw", "extensions"),
     });
   });
 });

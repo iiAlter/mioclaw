@@ -69,7 +69,7 @@ function createScriptOperandFixture(tmp: string, fixture?: RuntimeFixture): Scri
 }
 
 function withFakeRuntimeBin<T>(params: { binName: string; run: () => T }): T {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `openclaw-${params.binName}-bin-`));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `mioclaw-${params.binName}-bin-`));
   const binDir = path.join(tmp, "bin");
   fs.mkdirSync(binDir, { recursive: true });
   const runtimePath =
@@ -97,7 +97,7 @@ function withFakeRuntimeBin<T>(params: { binName: string; run: () => T }): T {
 }
 
 function withFakeRuntimeBins<T>(params: { binNames: string[]; run: () => T }): T {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-runtime-bins-"));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-runtime-bins-"));
   const binDir = path.join(tmp, "bin");
   fs.mkdirSync(binDir, { recursive: true });
   for (const binName of params.binNames) {
@@ -184,7 +184,7 @@ describe("hardenApprovedExecutionPaths", () => {
 
   for (const testCase of cases) {
     it.runIf(process.platform !== "win32")(testCase.name, () => {
-      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-hardening-"));
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-approval-hardening-"));
       const oldPath = process.env.PATH;
       let pathToken: PathTokenSetup | null = null;
       if (testCase.withPathToken) {
@@ -432,7 +432,7 @@ describe("hardenApprovedExecutionPaths", () => {
       withFakeRuntimeBins({
         binNames,
         run: () => {
-          const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-script-plan-"));
+          const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-approval-script-plan-"));
           const fixture = createScriptOperandFixture(tmp, runtimeCase);
           fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
           const executablePath = fixture.command[0];
@@ -464,7 +464,7 @@ describe("hardenApprovedExecutionPaths", () => {
   }
 
   it("captures mutable shell script operands in approval plans", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-script-plan-"));
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-approval-script-plan-"));
     const fixture = createScriptOperandFixture(tmp);
     fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
     if (process.platform !== "win32") {
@@ -493,7 +493,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "bun",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bun-package-script-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-bun-package-script-"));
         try {
           const prepared = buildSystemRunApprovalPlan({
             command: ["bun", "run", "dev"],
@@ -515,7 +515,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "deno",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-deno-eval-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-deno-eval-"));
         try {
           const prepared = buildSystemRunApprovalPlan({
             command: ["deno", "eval", "console.log('SAFE')"],
@@ -537,7 +537,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "tsx",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tsx-eval-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-tsx-eval-"));
         try {
           const prepared = buildSystemRunApprovalPlan({
             command: ["tsx", "--eval", "console.log('SAFE')"],
@@ -559,7 +559,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "node",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-node-import-inline-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-node-import-inline-"));
         try {
           fs.writeFileSync(path.join(tmp, "main.mjs"), 'console.log("SAFE")\n');
           fs.writeFileSync(path.join(tmp, "preload.mjs"), 'console.log("SAFE")\n');
@@ -583,7 +583,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "ruby",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-ruby-require-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-ruby-require-"));
         try {
           fs.writeFileSync(path.join(tmp, "safe.rb"), 'puts "SAFE"\n');
           const prepared = buildSystemRunApprovalPlan({
@@ -606,7 +606,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "ruby",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-ruby-load-path-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-ruby-load-path-"));
         try {
           fs.writeFileSync(path.join(tmp, "safe.rb"), 'puts "SAFE"\n');
           const prepared = buildSystemRunApprovalPlan({
@@ -629,7 +629,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "perl",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-perl-module-preload-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-perl-module-preload-"));
         try {
           fs.writeFileSync(path.join(tmp, "safe.pl"), 'print "SAFE\\n";\n');
           const prepared = buildSystemRunApprovalPlan({
@@ -652,7 +652,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "perl",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-perl-load-path-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-perl-load-path-"));
         try {
           fs.writeFileSync(path.join(tmp, "safe.pl"), 'print "SAFE\\n";\n');
           const prepared = buildSystemRunApprovalPlan({
@@ -675,7 +675,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "perl",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-perl-preload-load-path-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-perl-preload-load-path-"));
         try {
           fs.writeFileSync(path.join(tmp, "safe.pl"), 'print "SAFE\\n";\n');
           const prepared = buildSystemRunApprovalPlan({
@@ -698,7 +698,7 @@ describe("hardenApprovedExecutionPaths", () => {
     withFakeRuntimeBin({
       binName: "node",
       run: () => {
-        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-inline-shell-node-"));
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-inline-shell-node-"));
         try {
           fs.writeFileSync(path.join(tmp, "run.js"), 'console.log("SAFE")\n');
           const prepared = buildSystemRunApprovalPlan({
@@ -718,7 +718,7 @@ describe("hardenApprovedExecutionPaths", () => {
   });
 
   it("captures the real shell script operand after value-taking shell flags", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-shell-option-value-"));
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "mioclaw-shell-option-value-"));
     try {
       const scriptPath = path.join(tmp, "run.sh");
       fs.writeFileSync(scriptPath, "#!/bin/sh\necho SAFE\n");

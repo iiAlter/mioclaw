@@ -8,7 +8,7 @@ import {
   type ProviderAuthMethodNonInteractiveContext,
   type ProviderAuthResult,
   type ProviderDiscoveryContext,
-} from "openclaw/plugin-sdk/core";
+} from "mioclaw/plugin-sdk/core";
 
 const PROVIDER_ID = "vllm";
 const DEFAULT_BASE_URL = "http://127.0.0.1:8000/v1";

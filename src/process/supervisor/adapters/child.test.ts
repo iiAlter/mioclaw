@@ -102,7 +102,7 @@ describe("createChildAdapter", () => {
   });
 
   it("disables detached mode in service-managed runtime", async () => {
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
+    process.env.OPENCLAW_SERVICE_MARKER = "mioclaw";
 
     await createAdapterHarness({ pid: 7777 });
 

@@ -1,12 +1,12 @@
 /**
- * Twitch channel plugin for OpenClaw.
+ * Twitch channel plugin for Mioclaw.
  *
  * Main plugin export combining all adapters (outbound, actions, status, gateway).
  * This is the primary entry point for the Twitch channel integration.
  */
 
-import type { OpenClawConfig } from "openclaw/plugin-sdk/twitch";
-import { buildChannelConfigSchema } from "openclaw/plugin-sdk/twitch";
+import type { OpenClawConfig } from "mioclaw/plugin-sdk/twitch";
+import { buildChannelConfigSchema } from "mioclaw/plugin-sdk/twitch";
 import { twitchMessageActions } from "./actions.js";
 import { removeClientManager } from "./client-manager-registry.js";
 import { TwitchConfigSchema } from "./config-schema.js";
@@ -33,7 +33,7 @@ import { isAccountConfigured } from "./utils/twitch.js";
  * Twitch channel plugin.
  *
  * Implements the ChannelPlugin interface to provide Twitch chat integration
- * for OpenClaw. Supports message sending, receiving, access control, and
+ * for Mioclaw. Supports message sending, receiving, access control, and
  * status monitoring.
  */
 export const twitchPlugin: ChannelPlugin<TwitchAccountConfig> = {

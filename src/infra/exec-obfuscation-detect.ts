@@ -2,7 +2,7 @@
  * Detects obfuscated or encoded commands that could bypass allowlist-based
  * security filters.
  *
- * Addresses: https://github.com/openclaw/openclaw/issues/8592
+ * Addresses: https://github.com/mioclaw/mioclaw/issues/8592
  */
 
 export type ObfuscationDetection = {

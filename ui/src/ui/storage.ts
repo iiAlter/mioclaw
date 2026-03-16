@@ -1,6 +1,6 @@
-const KEY = "openclaw.control.settings.v1";
-const LEGACY_TOKEN_SESSION_KEY = "openclaw.control.token.v1";
-const TOKEN_SESSION_KEY_PREFIX = "openclaw.control.token.v1:";
+const KEY = "mioclaw.control.settings.v1";
+const LEGACY_TOKEN_SESSION_KEY = "mioclaw.control.token.v1";
+const TOKEN_SESSION_KEY_PREFIX = "mioclaw.control.token.v1:";
 
 type PersistedUiSettings = Omit<UiSettings, "token"> & { token?: never };
 

@@ -292,7 +292,7 @@ export async function initSessionState(params: {
       if (shouldBypassAcpResetForTrigger(triggerLower)) {
         // ACP-bound conversations handle /new and /reset in command handling
         // so the bound ACP runtime can be reset in place without rotating the
-        // normal OpenClaw session/transcript.
+        // normal Mioclaw session/transcript.
         break;
       }
       isNewSession = true;

@@ -44,7 +44,7 @@ const relayGatewayIdentity = (() => {
 })();
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-push-apns-test-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-push-apns-test-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -65,7 +65,7 @@ describe("push APNs registration store", () => {
     const saved = await registerApnsToken({
       nodeId: "ios-node-1",
       token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-      topic: "ai.openclaw.ios",
+      topic: "ai.mioclaw.ios",
       environment: "sandbox",
       baseDir,
     });
@@ -77,7 +77,7 @@ describe("push APNs registration store", () => {
     expect(loaded && loaded.transport === "direct" ? loaded.token : null).toBe(
       "abcd1234abcd1234abcd1234abcd1234",
     );
-    expect(loaded?.topic).toBe("ai.openclaw.ios");
+    expect(loaded?.topic).toBe("ai.mioclaw.ios");
     expect(loaded?.environment).toBe("sandbox");
     expect(loaded?.updatedAtMs).toBe(saved.updatedAtMs);
   });
@@ -90,7 +90,7 @@ describe("push APNs registration store", () => {
       relayHandle: "relay-handle-123",
       sendGrant: "send-grant-123",
       installationId: "install-123",
-      topic: "ai.openclaw.ios",
+      topic: "ai.mioclaw.ios",
       environment: "production",
       distribution: "official",
       tokenDebugSuffix: "abcd1234",
@@ -105,7 +105,7 @@ describe("push APNs registration store", () => {
       relayHandle: "relay-handle-123",
       sendGrant: "send-grant-123",
       installationId: "install-123",
-      topic: "ai.openclaw.ios",
+      topic: "ai.mioclaw.ios",
       environment: "production",
       distribution: "official",
       tokenDebugSuffix: "abcd1234",
@@ -119,7 +119,7 @@ describe("push APNs registration store", () => {
       registerApnsToken({
         nodeId: "ios-node-1",
         token: "not-a-token",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         baseDir,
       }),
     ).rejects.toThrow("invalid APNs token");
@@ -131,7 +131,7 @@ describe("push APNs registration store", () => {
       registerApnsToken({
         nodeId: "n".repeat(257),
         token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         baseDir,
       }),
     ).rejects.toThrow("nodeId required");
@@ -139,7 +139,7 @@ describe("push APNs registration store", () => {
       registerApnsToken({
         nodeId: "ios-node-1",
         token: "A".repeat(513),
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         baseDir,
       }),
     ).rejects.toThrow("invalid APNs token");
@@ -162,7 +162,7 @@ describe("push APNs registration store", () => {
         relayHandle: "relay-handle-123",
         sendGrant: "send-grant-123",
         installationId: "install-123",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "staging",
         distribution: "official",
         baseDir,
@@ -175,7 +175,7 @@ describe("push APNs registration store", () => {
         relayHandle: "relay-handle-123",
         sendGrant: "send-grant-123",
         installationId: "install-123",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "production",
         distribution: "beta",
         baseDir,
@@ -193,7 +193,7 @@ describe("push APNs registration store", () => {
         relayHandle: oversized,
         sendGrant: "send-grant-123",
         installationId: "install-123",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "production",
         distribution: "official",
         baseDir,
@@ -206,7 +206,7 @@ describe("push APNs registration store", () => {
         relayHandle: "relay-handle-123",
         sendGrant: "send-grant-123",
         installationId: oversized,
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "production",
         distribution: "official",
         baseDir,
@@ -219,7 +219,7 @@ describe("push APNs registration store", () => {
         relayHandle: "relay-handle-123",
         sendGrant: "x".repeat(1025),
         installationId: "install-123",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "production",
         distribution: "official",
         baseDir,
@@ -232,7 +232,7 @@ describe("push APNs registration store", () => {
     await registerApnsToken({
       nodeId: "ios-node-1",
       token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-      topic: "ai.openclaw.ios",
+      topic: "ai.mioclaw.ios",
       baseDir,
     });
 
@@ -248,7 +248,7 @@ describe("push APNs registration store", () => {
       const stale = await registerApnsToken({
         nodeId: "ios-node-1",
         token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "sandbox",
         baseDir,
       });
@@ -257,7 +257,7 @@ describe("push APNs registration store", () => {
       const fresh = await registerApnsToken({
         nodeId: "ios-node-1",
         token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "sandbox",
         baseDir,
       });
@@ -458,7 +458,7 @@ describe("push APNs send semantics", () => {
         nodeId: "ios-node-alert",
         transport: "direct",
         token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "sandbox",
         updatedAtMs: 1,
       },
@@ -482,7 +482,7 @@ describe("push APNs send semantics", () => {
         alert: { title: "Wake", body: "Ping" },
         sound: "default",
       },
-      openclaw: {
+      mioclaw: {
         kind: "push.test",
         nodeId: "ios-node-alert",
       },
@@ -504,7 +504,7 @@ describe("push APNs send semantics", () => {
         nodeId: "ios-node-wake",
         transport: "direct",
         token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "production",
         updatedAtMs: 1,
       },
@@ -526,7 +526,7 @@ describe("push APNs send semantics", () => {
       aps: {
         "content-available": 1,
       },
-      openclaw: {
+      mioclaw: {
         kind: "node.wake",
         reason: "node.invoke",
         nodeId: "ios-node-wake",
@@ -553,7 +553,7 @@ describe("push APNs send semantics", () => {
         nodeId: "ios-node-wake-default-reason",
         transport: "direct",
         token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "sandbox",
         updatedAtMs: 1,
       },
@@ -568,7 +568,7 @@ describe("push APNs send semantics", () => {
 
     const sent = send.mock.calls[0]?.[0];
     expect(sent?.payload).toMatchObject({
-      openclaw: {
+      mioclaw: {
         kind: "node.wake",
         reason: "node.invoke",
         nodeId: "ios-node-wake-default-reason",
@@ -596,7 +596,7 @@ describe("push APNs send semantics", () => {
         relayHandle: "relay-handle-123",
         sendGrant: "send-grant-123",
         installationId: "install-123",
-        topic: "ai.openclaw.ios",
+        topic: "ai.mioclaw.ios",
         environment: "production",
         distribution: "official",
         updatedAtMs: 1,
@@ -626,7 +626,7 @@ describe("push APNs send semantics", () => {
     expect(typeof sent?.signature).toBe("string");
     expect(typeof sent?.signedAtMs).toBe("number");
     const signedPayload = [
-      "openclaw-relay-send-v1",
+      "mioclaw-relay-send-v1",
       sent?.gatewayDeviceId,
       String(sent?.signedAtMs),
       sent?.bodyJson,
@@ -689,7 +689,7 @@ describe("push APNs send semantics", () => {
           nodeId: "ios-node-direct",
           transport: "direct",
           token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-          topic: "ai.openclaw.ios",
+          topic: "ai.mioclaw.ios",
           environment: "sandbox",
           updatedAtMs: 1,
         },
@@ -705,7 +705,7 @@ describe("push APNs send semantics", () => {
           relayHandle: "relay-handle-123",
           sendGrant: "send-grant-123",
           installationId: "install-123",
-          topic: "ai.openclaw.ios",
+          topic: "ai.mioclaw.ios",
           environment: "production",
           distribution: "official",
           updatedAtMs: 1,
@@ -720,7 +720,7 @@ describe("push APNs send semantics", () => {
           nodeId: "ios-node-direct",
           transport: "direct",
           token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-          topic: "ai.openclaw.ios",
+          topic: "ai.mioclaw.ios",
           environment: "sandbox",
           updatedAtMs: 1,
         },

@@ -4,7 +4,7 @@ import {
   createDedupeCache,
   createPersistentDedupe,
   readJsonFileWithFallback,
-} from "openclaw/plugin-sdk/feishu";
+} from "mioclaw/plugin-sdk/feishu";
 
 // Persistent TTL: 24 hours — survives restarts & WebSocket reconnects.
 const DEDUP_TTL_MS = 24 * 60 * 60 * 1000;
@@ -20,9 +20,9 @@ function resolveStateDirFromEnv(env: NodeJS.ProcessEnv = process.env): string {
     return stateOverride;
   }
   if (env.VITEST || env.NODE_ENV === "test") {
-    return path.join(os.tmpdir(), ["openclaw-vitest", String(process.pid)].join("-"));
+    return path.join(os.tmpdir(), ["mioclaw-vitest", String(process.pid)].join("-"));
   }
-  return path.join(os.homedir(), ".openclaw");
+  return path.join(os.homedir(), ".mioclaw");
 }
 
 function resolveNamespaceFilePath(namespace: string): string {

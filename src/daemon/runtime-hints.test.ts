@@ -7,15 +7,15 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "darwin",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          OPENCLAW_STATE_DIR: "/tmp/mioclaw-state",
           OPENCLAW_LOG_PREFIX: "gateway",
         },
         systemdServiceName: "mioclaw-gateway",
         windowsTaskName: "Mioclaw Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /tmp/openclaw-state/logs/gateway.log",
-      "Launchd stderr (if installed): /tmp/openclaw-state/logs/gateway.err.log",
+      "Launchd stdout (if installed): /tmp/mioclaw-state/logs/gateway.log",
+      "Launchd stderr (if installed): /tmp/mioclaw-state/logs/gateway.err.log",
     ]);
   });
 
@@ -42,29 +42,29 @@ describe("buildPlatformServiceStartHints", () => {
     expect(
       buildPlatformServiceStartHints({
         platform: "darwin",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
+        installCommand: "mioclaw gateway install",
+        startCommand: "mioclaw gateway",
+        launchAgentPlistPath: "~/Library/LaunchAgents/com.mioclaw.gateway.plist",
         systemdServiceName: "mioclaw-gateway",
         windowsTaskName: "Mioclaw Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
-      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.openclaw.gateway.plist",
+      "mioclaw gateway install",
+      "mioclaw gateway",
+      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.mioclaw.gateway.plist",
     ]);
     expect(
       buildPlatformServiceStartHints({
         platform: "linux",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
+        installCommand: "mioclaw gateway install",
+        startCommand: "mioclaw gateway",
+        launchAgentPlistPath: "~/Library/LaunchAgents/com.mioclaw.gateway.plist",
         systemdServiceName: "mioclaw-gateway",
         windowsTaskName: "Mioclaw Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
+      "mioclaw gateway install",
+      "mioclaw gateway",
       "systemctl --user start mioclaw-gateway.service",
     ]);
   });

@@ -27,7 +27,7 @@ export type GatewayInstallTokenResolution = {
 function formatAmbiguousGatewayAuthModeReason(): string {
   return [
     "gateway.auth.token and gateway.auth.password are both configured while gateway.auth.mode is unset.",
-    `Set ${formatCliCommand("openclaw config set gateway.auth.mode token")} or ${formatCliCommand("openclaw config set gateway.auth.mode password")}.`,
+    `Set ${formatCliCommand("mioclaw config set gateway.auth.mode token")} or ${formatCliCommand("mioclaw config set gateway.auth.mode password")}.`,
   ].join(" ");
 }
 

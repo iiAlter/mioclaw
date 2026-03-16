@@ -85,7 +85,7 @@ describe("canvas host", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-canvas-fixtures-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-canvas-fixtures-"));
   });
 
   afterAll(async () => {
@@ -284,7 +284,7 @@ describe("canvas host", () => {
       const res = await fetch(`http://127.0.0.1:${server.port}/__openclaw__/a2ui/`);
       const html = await res.text();
       expect(res.status).toBe(200);
-      expect(html).toContain("openclaw-a2ui-host");
+      expect(html).toContain("mioclaw-a2ui-host");
       expect(html).toContain("openclawCanvasA2UIAction");
 
       const bundleRes = await fetch(

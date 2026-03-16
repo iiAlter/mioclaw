@@ -103,7 +103,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       expect(pids).not.toContain(process.pid);
     });
 
-    it("excludes pids whose command does not include 'openclaw'", () => {
+    it("excludes pids whose command does not include 'mioclaw'", () => {
       const otherPid = process.pid + 2;
       mockSpawnSync.mockReturnValue({
         error: null,
@@ -162,7 +162,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       expect(findGatewayPidsOnPortSync(18789)).toEqual([]);
     });
 
-    it("parses multiple openclaw pids from a single lsof output block", () => {
+    it("parses multiple mioclaw pids from a single lsof output block", () => {
       const pid1 = process.pid + 10;
       const pid2 = process.pid + 11;
       mockSpawnSync.mockReturnValue({
@@ -179,9 +179,9 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       expect(result).toContain(pid2);
     });
 
-    it("returns [] when status 0 but only non-openclaw pids present", () => {
+    it("returns [] when status 0 but only non-mioclaw pids present", () => {
       // Port may be bound by an unrelated process. findGatewayPidsOnPortSync
-      // only tracks openclaw processes — non-openclaw listeners are ignored.
+      // only tracks mioclaw processes — non-mioclaw listeners are ignored.
       const otherPid = process.pid + 50;
       mockSpawnSync.mockReturnValue({
         error: null,
@@ -297,10 +297,10 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       expect(spawnCount).toBe(3);
     });
 
-    it("lsof status 1 with non-empty openclaw stdout is treated as busy, not free (Linux container edge case)", () => {
+    it("lsof status 1 with non-empty mioclaw stdout is treated as busy, not free (Linux container edge case)", () => {
       // On Linux containers with restricted /proc (AppArmor, seccomp, user namespaces),
       // lsof can exit 1 AND still emit output for processes it could read.
-      // status 1 + non-empty openclaw stdout must not be treated as port-free.
+      // status 1 + non-empty mioclaw stdout must not be treated as port-free.
       const stalePid = process.pid + 601;
       let call = 0;
       mockSpawnSync.mockImplementation(() => {
@@ -315,7 +315,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
           };
         }
         if (call === 2) {
-          // status 1 + openclaw pid in stdout — container-restricted lsof reports partial results
+          // status 1 + mioclaw pid in stdout — container-restricted lsof reports partial results
           return {
             error: null,
             status: 1,
@@ -678,12 +678,12 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
   // parsePidsFromLsofOutput — branch-coverage for mid-loop && short-circuits
   // -------------------------------------------------------------------------
   describe("parsePidsFromLsofOutput — branch coverage (lines 67-69)", () => {
-    it("skips a mid-loop entry when the command does not include 'openclaw'", () => {
-      // Exercises the false branch of currentCmd.toLowerCase().includes("openclaw")
-      // inside the mid-loop flush: a non-openclaw cmd between two entries must not
-      // be pushed, but the following openclaw entry still must be.
+    it("skips a mid-loop entry when the command does not include 'mioclaw'", () => {
+      // Exercises the false branch of currentCmd.toLowerCase().includes("mioclaw")
+      // inside the mid-loop flush: a non-mioclaw cmd between two entries must not
+      // be pushed, but the following mioclaw entry still must be.
       const stalePid = process.pid + 700;
-      // Mixed output: non-openclaw entry first, then openclaw entry
+      // Mixed output: non-mioclaw entry first, then mioclaw entry
       const stdout = `p${process.pid + 699}\ncnginx\np${stalePid}\ncmioclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
@@ -707,7 +707,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       // false branch: a malformed 'p' line (e.g. 'p0' or 'pNaN') must not corrupt
       // currentPid and must not end up in the returned pids array.
       const stalePid = process.pid + 703;
-      // p0 is invalid (not > 0); the following valid openclaw entry must still be found.
+      // p0 is invalid (not > 0); the following valid mioclaw entry must still be found.
       const stdout = `p0\ncmioclaw-gateway\np${stalePid}\ncmioclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
@@ -731,13 +731,13 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
   });
 
   // -------------------------------------------------------------------------
-  // pollPortOnce branch — status 1 + non-empty stdout with zero openclaw pids
+  // pollPortOnce branch — status 1 + non-empty stdout with zero mioclaw pids
   // -------------------------------------------------------------------------
-  describe("pollPortOnce — status 1 + non-empty non-openclaw stdout (line 145)", () => {
-    it("treats status 1 + non-openclaw stdout as port-free (not an openclaw process)", () => {
-      // status 1 + non-empty stdout where no openclaw pids are present:
+  describe("pollPortOnce — status 1 + non-empty non-mioclaw stdout (line 145)", () => {
+    it("treats status 1 + non-mioclaw stdout as port-free (not an mioclaw process)", () => {
+      // status 1 + non-empty stdout where no mioclaw pids are present:
       // the port may be held by an unrelated process. From our perspective
-      // (we only kill openclaw pids) it is effectively free.
+      // (we only kill mioclaw pids) it is effectively free.
       const stalePid = process.pid + 800;
       let call = 0;
       mockSpawnSync.mockImplementation(() => {
@@ -750,7 +750,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
             stderr: "",
           };
         }
-        // status 1 + non-openclaw output — should be treated as free:true for our purposes
+        // status 1 + non-mioclaw output — should be treated as free:true for our purposes
         return {
           error: null,
           status: 1,
@@ -759,7 +759,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
         };
       });
       vi.spyOn(process, "kill").mockReturnValue(true);
-      // Should complete cleanly — no openclaw pids in status-1 output → free
+      // Should complete cleanly — no mioclaw pids in status-1 output → free
       expect(() => cleanStaleGatewayProcessesSync()).not.toThrow();
       // Completed in exactly 2 calls (initial find + 1 free poll)
       expect(call).toBe(2);

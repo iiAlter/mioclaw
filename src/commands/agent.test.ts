@@ -58,7 +58,7 @@ const runCliAgentSpy = vi.spyOn(cliRunnerModule, "runCliAgent");
 const deliverAgentCommandResultSpy = vi.spyOn(agentDeliveryModule, "deliverAgentCommandResult");
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-agent-" });
+  return withTempHomeBase(fn, { prefix: "mioclaw-agent-" });
 }
 
 function mockConfig(
@@ -73,7 +73,7 @@ function mockConfig(
       defaults: {
         model: { primary: "anthropic/claude-opus-4-5" },
         models: { "anthropic/claude-opus-4-5": {} },
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "mioclaw"),
         ...agentOverrides,
       },
       list: agentsList,
@@ -279,7 +279,7 @@ describe("agentCommand", () => {
           defaults: {
             model: { primary: "anthropic/claude-opus-4-5" },
             models: { "anthropic/claude-opus-4-5": {} },
-            workspace: path.join(home, "openclaw"),
+            workspace: path.join(home, "mioclaw"),
           },
         },
         session: { store, mainKey: "main" },

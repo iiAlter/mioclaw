@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/diffs";
+import type { OpenClawConfig } from "mioclaw/plugin-sdk/diffs";
 
 const DEFAULT_GATEWAY_PORT = 18789;
 

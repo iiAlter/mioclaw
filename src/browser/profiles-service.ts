@@ -27,7 +27,7 @@ export type CreateProfileParams = {
   name: string;
   color?: string;
   cdpUrl?: string;
-  driver?: "openclaw" | "extension";
+  driver?: "mioclaw" | "extension";
 };
 
 export type CreateProfileResult = {

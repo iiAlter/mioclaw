@@ -1,4 +1,4 @@
-import type { OpenClawConfig, DmPolicy } from "openclaw/plugin-sdk/googlechat";
+import type { OpenClawConfig, DmPolicy } from "mioclaw/plugin-sdk/googlechat";
 import {
   DEFAULT_ACCOUNT_ID,
   applySetupAccountConfigPatch,
@@ -11,7 +11,7 @@ import {
   type ChannelOnboardingDmPolicy,
   type WizardPrompter,
   migrateBaseNameToDefaultAccount,
-} from "openclaw/plugin-sdk/googlechat";
+} from "mioclaw/plugin-sdk/googlechat";
 import {
   listGoogleChatAccountIds,
   resolveDefaultGoogleChatAccountId,

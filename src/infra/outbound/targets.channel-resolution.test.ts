@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
   loadOpenClawPlugins: vi.fn(),
 }));
 
-const TEST_WORKSPACE_ROOT = "/tmp/openclaw-test-workspace";
+const TEST_WORKSPACE_ROOT = "/tmp/mioclaw-test-workspace";
 
 function normalizeChannel(value?: string) {
   return value?.trim().toLowerCase() ?? undefined;

@@ -182,7 +182,7 @@ describe("shell wrapper exploit regression", () => {
     if (process.platform === "win32" || !fs.existsSync(bashPath)) {
       return;
     }
-    const marker = path.join(os.tmpdir(), `openclaw-ps4-marker-${process.pid}-${Date.now()}`);
+    const marker = path.join(os.tmpdir(), `mioclaw-ps4-marker-${process.pid}-${Date.now()}`);
     try {
       fs.unlinkSync(marker);
     } catch {
@@ -224,12 +224,12 @@ describe("git env exploit regression", () => {
     }
 
     const helperDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), `openclaw-git-exec-path-${process.pid}-${Date.now()}-`),
+      path.join(os.tmpdir(), `mioclaw-git-exec-path-${process.pid}-${Date.now()}-`),
     );
     const helperPath = path.join(helperDir, "git-remote-https");
     const marker = path.join(
       os.tmpdir(),
-      `openclaw-git-exec-path-marker-${process.pid}-${Date.now()}`,
+      `mioclaw-git-exec-path-marker-${process.pid}-${Date.now()}`,
     );
     try {
       try {
@@ -282,7 +282,7 @@ describe("git env exploit regression", () => {
       return;
     }
 
-    const marker = path.join(os.tmpdir(), `openclaw-git-ssh-command-${process.pid}-${Date.now()}`);
+    const marker = path.join(os.tmpdir(), `mioclaw-git-ssh-command-${process.pid}-${Date.now()}`);
     try {
       fs.unlinkSync(marker);
     } catch {

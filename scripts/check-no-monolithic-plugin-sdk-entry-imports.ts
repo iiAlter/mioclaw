@@ -4,7 +4,7 @@ import { discoverOpenClawPlugins } from "../src/plugins/discovery.js";
 
 // Match exact monolithic-root specifier in any code path:
 // imports/exports, require/dynamic import, and test mocks (vi.mock/jest.mock).
-const ROOT_IMPORT_PATTERN = /["']openclaw\/plugin-sdk["']/;
+const ROOT_IMPORT_PATTERN = /["']mioclaw\/plugin-sdk["']/;
 
 function hasMonolithicRootImport(content: string): boolean {
   return ROOT_IMPORT_PATTERN.test(content);
@@ -84,13 +84,13 @@ function main() {
   }
 
   if (offenders.length > 0) {
-    console.error("Bundled plugin source files must not import monolithic openclaw/plugin-sdk.");
+    console.error("Bundled plugin source files must not import monolithic mioclaw/plugin-sdk.");
     for (const file of offenders.toSorted()) {
       const relative = path.relative(process.cwd(), file) || file;
       console.error(`- ${relative}`);
     }
     console.error(
-      "Use openclaw/plugin-sdk/<channel> for channel plugins, /core for startup surfaces, or /compat for broader internals.",
+      "Use mioclaw/plugin-sdk/<channel> for channel plugins, /core for startup surfaces, or /compat for broader internals.",
     );
     process.exit(1);
   }

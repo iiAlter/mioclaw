@@ -3,7 +3,7 @@ import {
   normalizeStringEntries,
   resolveAllowlistCandidates,
   type AllowlistMatch,
-} from "openclaw/plugin-sdk/matrix";
+} from "mioclaw/plugin-sdk/matrix";
 
 function normalizeAllowList(list?: Array<string | number>) {
   return normalizeStringEntries(list);

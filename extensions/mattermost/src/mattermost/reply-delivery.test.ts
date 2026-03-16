@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/mattermost";
+import type { OpenClawConfig } from "mioclaw/plugin-sdk/mattermost";
 import { describe, expect, it, vi } from "vitest";
 import { deliverMattermostReplyPayload } from "./reply-delivery.js";
 
 describe("deliverMattermostReplyPayload", () => {
   it("passes agent-scoped mediaLocalRoots when sending media paths", async () => {
     const previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mm-state-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "mioclaw-mm-state-"));
     process.env.OPENCLAW_STATE_DIR = stateDir;
 
     try {

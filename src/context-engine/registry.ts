@@ -12,7 +12,7 @@ export type ContextEngineFactory = () => ContextEngine | Promise<ContextEngine>;
 // Registry (module-level singleton)
 // ---------------------------------------------------------------------------
 
-const CONTEXT_ENGINE_REGISTRY_STATE = Symbol.for("openclaw.contextEngineRegistryState");
+const CONTEXT_ENGINE_REGISTRY_STATE = Symbol.for("mioclaw.contextEngineRegistryState");
 
 type ContextEngineRegistryState = {
   engines: Map<string, ContextEngineFactory>;

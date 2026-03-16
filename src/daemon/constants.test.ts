@@ -37,7 +37,7 @@ describe("resolveGatewayLaunchAgentLabel", () => {
 
   it("returns profile-specific label when profile is set", () => {
     const result = resolveGatewayLaunchAgentLabel("dev");
-    expect(result).toBe("ai.openclaw.dev");
+    expect(result).toBe("ai.mioclaw.dev");
   });
 });
 

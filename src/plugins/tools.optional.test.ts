@@ -156,7 +156,7 @@ describe("resolvePluginTools optional tools", () => {
 
   it("forwards an explicit env to plugin loading", () => {
     setOptionalDemoRegistry();
-    const env = { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv;
+    const env = { OPENCLAW_HOME: "/srv/mioclaw-home" } as NodeJS.ProcessEnv;
 
     resolvePluginTools({
       context: createContext() as never,
