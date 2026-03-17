@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Board</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Memory Board</h1>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="搜索记忆...">
+        <button id="searchBtn">搜索</button>
+      </div>
+      <button class="btn-secondary" id="exportBtn">导出</button>
+      <button class="btn-secondary" id="importBtn">导入</button>
+      <input type="file" id="importFile" accept=".json" style="display: none;">
+      <button class="btn-primary" id="addBtn">+ 添加记忆</button>
+    </header>
+
+    <main class="board" id="board">
+      <!-- 分类列将通过 JS 动态生成 -->
+    </main>
+  </div>
+
+  <!-- 添加/编辑记忆模态框 -->
+  <div class="modal" id="memoryModal">
+    <div class="modal-content">
+      <h2 id="modalTitle">添加记忆</h2>
+      <form id="memoryForm">
+        <input type="hidden" id="memoryId">
+
+        <div class="form-group">
+          <label for="memoryText">内容</label>
+          <textarea id="memoryText" required placeholder="输入记忆内容..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="memoryCategory">分类</label>
+          <select id="memoryCategory">
+            <option value="preference">偏好 (preference)</option>
+            <option value="fact">事实 (fact)</option>
+            <option value="decision">决策 (decision)</option>
+            <option value="entity">实体 (entity)</option>
+            <option value="reflection">反思 (reflection)</option>
+            <option value="other">其他 (other)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="memoryImportance">重要性: <span id="importanceValue">0.5</span></label>
+          <input type="range" id="memoryImportance" min="0" max="1" step="0.1" value="0.5">
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="cancelBtn">取消</button>
+          <button type="submit" class="btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 删除确认模态框 -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <h2>确认删除</h2>
+      <p>确定要删除这条记忆吗？此操作无法撤销。</p>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="cancelDeleteBtn">取消</button>
+        <button type="button" class="btn-danger" id="confirmDeleteBtn">删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导入结果模态框 -->
+  <div class="modal" id="importModal">
+    <div class="modal-content">
+      <h2>导入结果</h2>
+      <div id="importResult"></div>
+      <div class="form-actions">
+        <button type="button" class="btn-primary" id="closeImportBtn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
