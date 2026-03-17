@@ -1,12 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
-import { MANIFEST_KEY } from "../compat/legacy-names.js";
+import { MANIFEST_KEY, LEGACY_PROJECT_NAMES } from "../compat/legacy-names.js";
 import { openBoundaryFileSync } from "../infra/boundary-file-read.js";
 import { isRecord } from "../utils.js";
 import type { PluginConfigUiHint, PluginKind } from "./types.js";
 
 export const PLUGIN_MANIFEST_FILENAME = "mioclaw.plugin.json";
-export const PLUGIN_MANIFEST_FILENAMES = [PLUGIN_MANIFEST_FILENAME] as const;
+export const LEGACY_PLUGIN_MANIFEST_FILENAME = "openclaw.plugin.json";
+export const PLUGIN_MANIFEST_FILENAMES = [
+  PLUGIN_MANIFEST_FILENAME,
+  LEGACY_PLUGIN_MANIFEST_FILENAME,
+] as const;
 
 export type PluginManifest = {
   id: string;
@@ -178,7 +182,17 @@ export function getPackageManifestMetadata(
   if (!manifest) {
     return undefined;
   }
-  return manifest[MANIFEST_KEY];
+  // First check mioclaw.extensions
+  if (manifest[MANIFEST_KEY]) {
+    return manifest[MANIFEST_KEY];
+  }
+  // Fallback to openclaw.extensions for compatibility
+  for (const legacyKey of LEGACY_PROJECT_NAMES) {
+    if (manifest[legacyKey as keyof typeof manifest]) {
+      return manifest[legacyKey as keyof typeof manifest] as OpenClawPackageManifest;
+    }
+  }
+  return undefined;
 }
 
 export function resolvePackageExtensionEntries(
