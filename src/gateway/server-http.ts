@@ -114,15 +114,15 @@ function sendJson(res: ServerResponse, status: number, body: unknown) {
 
 const MEMORY_BOARD_ROOT = join(__dirname, "memory-board");
 
-function handleMemoryBoardRequest(
+async function handleMemoryBoardRequest(
   req: IncomingMessage,
   res: ServerResponse,
   pathname: string,
-): boolean {
+): Promise<boolean> {
   // API routes
   if (pathname.startsWith("/api/memory")) {
     const url = new URL(req.url!, "http://localhost");
-    return handleMemoryApi(req, res, url);
+    return await handleMemoryApi(req, res, url);
   }
 
   // Static files

@@ -106,7 +106,7 @@ async function getLanceDB(): Promise<LanceDBConnection> {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const LanceDB = await import(LANCEDB_MODULE_PATH);
     lancedb = await LanceDB.connect(DB_PATH);
-    return lancedb;
+    return lancedb!;
   } catch (e) {
     console.error("Failed to load LanceDB:", (e as Error).message);
     throw e;
