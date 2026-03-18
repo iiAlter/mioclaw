@@ -18,6 +18,8 @@ import { safeEqualSecret } from "../security/secret-equal.js";
 function handleSlackHttpRequest(_req: unknown, _res: unknown) {
   return false;
 }
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   AUTH_RATE_LIMIT_SCOPE_HOOK_AUTH,
   createAuthRateLimiter,
@@ -57,6 +59,7 @@ import {
 } from "./hooks.js";
 import { sendGatewayAuthFailure, setDefaultSecurityHeaders } from "./http-common.js";
 import { getBearerToken } from "./http-utils.js";
+import { handleMemoryApi } from "./memory-api.js";
 import { resolveRequestClientIp } from "./net.js";
 import { handleOpenAiHttpRequest } from "./openai-http.js";
 import { handleOpenResponsesHttpRequest } from "./openresponses-http.js";
@@ -107,6 +110,46 @@ function sendJson(res: ServerResponse, status: number, body: unknown) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.end(JSON.stringify(body));
+}
+
+const MEMORY_BOARD_ROOT = join(__dirname, "memory-board");
+
+function handleMemoryBoardRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+  pathname: string,
+): boolean {
+  // API routes
+  if (pathname.startsWith("/api/memory")) {
+    const url = new URL(req.url!, "http://localhost");
+    return handleMemoryApi(req, res, url);
+  }
+
+  // Static files
+  let filePath: string;
+  if (pathname === "/memory" || pathname === "/memory/") {
+    filePath = join(MEMORY_BOARD_ROOT, "index.html");
+  } else if (pathname.startsWith("/memory/")) {
+    filePath = join(MEMORY_BOARD_ROOT, pathname.slice("/memory/".length));
+  } else {
+    return false;
+  }
+
+  try {
+    const body = readFileSync(filePath);
+    const ext = filePath.split(".").pop() ?? "";
+    const contentTypes: Record<string, string> = {
+      html: "text/html",
+      js: "application/javascript",
+      css: "text/css",
+    };
+    res.setHeader("Content-Type", contentTypes[ext] ?? "application/octet-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.end(body);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 const GATEWAY_PROBE_STATUS_BY_PATH = new Map<string, "live" | "ready">([
@@ -887,6 +930,10 @@ export function createGatewayHttpServer(opts: {
       );
 
       if (controlUiEnabled) {
+        requestStages.push({
+          name: "memory-board",
+          run: () => handleMemoryBoardRequest(req, res, requestPath),
+        });
         requestStages.push({
           name: "control-ui-avatar",
           run: () =>
