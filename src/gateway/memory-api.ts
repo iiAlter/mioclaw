@@ -12,6 +12,8 @@ const LANCEDB_MODULE_PATH = path.join(
   "node_modules",
   "@lancedb",
   "lancedb",
+  "dist",
+  "index.js",
 );
 
 // Categories

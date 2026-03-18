@@ -20,6 +20,11 @@ function handleSlackHttpRequest(_req: unknown, _res: unknown) {
 }
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 import {
   AUTH_RATE_LIMIT_SCOPE_HOOK_AUTH,
   createAuthRateLimiter,
@@ -112,7 +117,7 @@ function sendJson(res: ServerResponse, status: number, body: unknown) {
   res.end(JSON.stringify(body));
 }
 
-const MEMORY_BOARD_ROOT = join(__dirname, "memory-board");
+const MEMORY_BOARD_ROOT = join(__dirname, "..", "src", "gateway", "memory-board");
 
 async function handleMemoryBoardRequest(
   req: IncomingMessage,
