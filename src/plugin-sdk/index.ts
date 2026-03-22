@@ -588,7 +588,9 @@ export {
 export type { DmGroupAccessReasonCode } from "../security/dm-policy-shared.js";
 export type { HookEntry } from "../hooks/types.js";
 export { clamp, escapeRegExp, normalizeE164, safeParseJson, sleep } from "../utils.js";
-export { stripAnsi } from "../terminal/ansi.js";
+// stripAnsi: 移除 ANSI 转义序列（终端颜色等）
+// stripMarkdown: 将 Markdown 格式文本转换为纯文本，用于不支持 Markdown 的渠道（如微信）
+export { stripAnsi, stripMarkdown } from "../terminal/ansi.js";
 export { missingTargetError } from "../infra/outbound/target-errors.js";
 export { registerLogTransport } from "../logging/logger.js";
 export type { LogTransport, LogTransportRecord } from "../logging/logger.js";
