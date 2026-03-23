@@ -1,0 +1,44 @@
+# SiYuan Note Configuration
+# 思源笔记配置
+
+siyuan:
+  # API base URL (思源运行的地址)
+  # Check SiYuan settings for the actual port (default: 6806)
+  base_url: "http://127.0.0.1:6806"
+
+  # API Token (在思源设置 → 关于 → API 中获取)
+  # Get from SiYuan: Settings → About → API → Copy Token
+  token: "yj64359j97mcldy5"
+
+  # Request timeout in seconds
+  timeout: 30
+
+  # Retry attempts for failed requests
+  retry: 3
+
+  # Verify SSL certificate (set to false for self-signed certs)
+  verify_ssl: true
+
+# Logging configuration
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  file: "~/.openclaw/skills/siyuan/siyuan.log"
+
+# Export settings
+export:
+  # Default output directory for backups
+  backup_dir: "~/Documents/SiYuan-Backups"
+
+  # Include assets (images, attachments) in export
+  include_assets: true
+
+  # Date format for backup folders
+  date_format: "%Y-%m-%d_%H%M%S"
+
+# Safety settings
+safety:
+  # Create backup before any write operation
+  backup_before_write: true
+
+  # Confirm destructive operations
+  confirm_destructive: true
