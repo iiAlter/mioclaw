@@ -46,7 +46,7 @@ type PackageManifest = PluginPackageManifest & {
 };
 
 const MISSING_EXTENSIONS_ERROR =
-  'package.json missing mioclaw.extensions; update the plugin package to include mioclaw.extensions (for example ["./dist/index.js"]). See https://docs.mioclaw.ai/help/troubleshooting#plugin-install-fails-with-missing-mioclaw-extensions';
+  'package.json missing mioclaw.extensions; update the plugin package to include mioclaw.extensions (for example ["./dist/index.js"]). See https://docs.openclaw.ai/help/troubleshooting#plugin-install-fails-with-missing-mioclaw-extensions';
 
 export const PLUGIN_INSTALL_ERROR_CODE = {
   INVALID_NPM_SPEC: "invalid_npm_spec",

@@ -217,7 +217,7 @@ export function buildGatewayConnectionDetails(
           ? undefined
           : "Break-glass (trusted private networks only): set OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1",
         "Doctor: mioclaw doctor --fix",
-        "Docs: https://docs.mioclaw.ai/gateway/remote",
+        "Docs: https://docs.openclaw.ai/gateway/remote",
       ].join("\n"),
     );
   }

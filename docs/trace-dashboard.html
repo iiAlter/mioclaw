@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mioclaw Trace — 信息流转追踪</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #1c2128;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+            --cyan: #58a6ff;
+            --green: #3fb950;
+            --yellow: #d29922;
+            --red: #f85149;
+            --magenta: #bc8cff;
+            --purple: #a371f7;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 16px;
+            color: var(--cyan);
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+        }
+        .status-dot.connected { background: var(--green); }
+        .status-dot.error { background: var(--red); }
+
+        button {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: inherit;
+        }
+        button:hover { background: var(--border); }
+
+        #stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+        #stats span { color: var(--text); }
+
+        #flow {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .trace-line {
+            display: grid;
+            grid-template-columns: 80px 70px 1fr;
+            gap: 10px;
+            padding: 6px 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 12px;
+            align-items: start;
+            animation: slideIn 0.1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .trace-line .time { color: var(--text-dim); font-size: 11px; padding-top: 1px; }
+        .trace-line .type { font-weight: 600; font-size: 11px; padding-top: 1px; }
+        .trace-line .msg { color: var(--text); word-break: break-all; line-height: 1.4; }
+
+        .trace-line.inbound     { border-left: 3px solid var(--cyan); }
+        .trace-line.outbound   { border-left: 3px solid var(--green); }
+        .trace-line.agent      { border-left: 3px solid var(--purple); }
+        .trace-line.tool       { border-left: 3px solid var(--yellow); }
+        .trace-line.chat       { border-left: 3px solid var(--magenta); }
+        .trace-line.error      { border-left: 3px solid var(--red); }
+        .trace-line.lifecycle  { border-left: 3px solid var(--green); }
+        .trace-line.assistant  { border-left: 3px solid var(--cyan); }
+        .trace-line.system     { border-left: 3px solid var(--text-dim); }
+
+        .type.inbound    { color: var(--cyan); }
+        .type.outbound   { color: var(--green); }
+        .type.agent      { color: var(--purple); }
+        .type.tool       { color: var(--yellow); }
+        .type.chat       { color: var(--magenta); }
+        .type.error      { color: var(--red); }
+        .type.lifecycle  { color: var(--green); }
+        .type.assistant  { color: var(--cyan); }
+        .type.system     { color: var(--text-dim); }
+
+        .empty {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 60px;
+            font-size: 14px;
+        }
+
+        .tool-args {
+            color: var(--yellow);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .msg pre {
+            background: var(--surface2);
+            padding: 4px 6px;
+            border-radius: 3px;
+            overflow: auto;
+            font-size: 11px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 80px;
+        }
+
+        .section-header {
+            font-size: 11px;
+            color: var(--text-dim);
+            padding: 8px 0 4px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 4px;
+        }
+
+        .run-group {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+            background: var(--surface2);
+        }
+
+        .run-header {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🐈 Mioclaw Trace — 信息流转追踪</h1>
+        <div class="controls">
+            <div class="status">
+                <div class="status-dot" id="dot"></div>
+                <span id="status-text">连接中...</span>
+            </div>
+            <button onclick="clearTrace()">清空</button>
+            <button onclick="togglePause()" id="pause-btn">暂停</button>
+        </div>
+    </header>
+
+    <div id="stats">
+        <div>消息: <span id="msg-count">0</span></div>
+        <div>Run: <span id="run-count">0</span></div>
+        <div>Tool调用: <span id="tool-count">0</span></div>
+        <div>延迟: <span id="latency">-</span></div>
+    </div>
+
+    <div id="flow">
+        <div class="empty">等待消息流转...</div>
+    </div>
+
+    <script>
+        const GW_URL = `ws://${location.hostname}:18795/ws/gateway`;
+
+        let ws = null;
+        let paused = false;
+        let lines = [];
+        let msgCount = 0, runCount = 0, toolCount = 0;
+        let lastTs = null;
+        let runId = null;
+        let currentRunGroup = null;
+
+        const flow = document.getElementById('flow');
+
+        function formatTime(ts) {
+            const d = new Date(ts || Date.now());
+            return d.toLocaleTimeString('zh-CN', {
+                hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }) + '.' + String(d.getMilliseconds()).padStart(3, '0');
+        }
+
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function formatValue(val, maxLen = 200) {
+            if (val === null || val === undefined) return '';
+            if (typeof val === 'object') {
+                val = JSON.stringify(val, null, 2);
+            }
+            val = String(val);
+            if (val.length > maxLen) val = val.substring(0, maxLen) + '…';
+            return escapeHtml(val);
+        }
+
+        function addLine(type, msg, data, ts) {
+            if (paused) return;
+            const empty = flow.querySelector('.empty');
+            if (empty) empty.remove();
+
+            const line = document.createElement('div');
+            line.className = `trace-line ${type}`;
+            const timeStr = formatTime(ts);
+            const typeLabel = type.toUpperCase();
+
+            let msgHtml = '';
+            if (typeof msg === 'string') {
+                msgHtml = `<div class="msg">${escapeHtml(msg)}</div>`;
+            } else if (msg && typeof msg === 'object') {
+                if (msg.content !== undefined) {
+                    msgHtml = `<div class="msg">${formatValue(msg.content)}</div>`;
+                } else {
+                    msgHtml = `<div class="msg"><pre>${JSON.stringify(msg, null, 2)}</pre></div>`;
+                }
+            }
+
+            line.innerHTML = `
+                <div class="time">${timeStr}</div>
+                <div class="type ${type}">${typeLabel}</div>
+                ${msgHtml}
+            `;
+
+            if (currentRunGroup) {
+                currentRunGroup.querySelector('.run-lines').appendChild(line);
+            } else {
+                flow.appendChild(line);
+            }
+
+            lines.push(line);
+            if (lines.length > 500) {
+                lines.shift().remove();
+            }
+        }
+
+        function startRun(runId, sessionKey, ts) {
+            currentRunGroup = document.createElement('div');
+            currentRunGroup.className = 'run-group';
+            currentRunGroup.innerHTML = `
+                <div class="run-header">
+                    <span>🔵 Run ${runId.substring(0, 8)}…</span>
+                    <span>${sessionKey || 'unknown'}</span>
+                </div>
+                <div class="run-lines" style="display:flex;flex-direction:column;gap:3px;"></div>
+            `;
+            flow.appendChild(currentRunGroup);
+            runCount++;
+            document.getElementById('run-count').textContent = runCount;
+        }
+
+        function endRun() {
+            currentRunGroup = null;
+        }
+
+        function handleMessage(data) {
+            if (!data.type) return;
+
+            const t = Date.now();
+            if (lastTs) {
+                document.getElementById('latency').textContent = (t - lastTs) + 'ms';
+            }
+            lastTs = t;
+
+            // Chat events
+            if (data.type === 'chat') {
+                const chatData = data.data || {};
+                if (chatData.delta !== undefined) {
+                    addLine('chat', chatData.delta, null, t);
+                    msgCount++;
+                    document.getElementById('msg-count').textContent = msgCount;
+                } else if (chatData.final) {
+                    addLine('chat', '[final] ' + (chatData.text || '').substring(0, 100), null, t);
+                }
+            }
+
+            // Agent events
+            else if (data.type === 'agent') {
+                const evt = data.data || {};
+                const stream = evt.stream || 'unknown';
+                const payload = evt.data || {};
+
+                if (stream === 'lifecycle') {
+                    if (payload.type === 'start' && evt.runId) {
+                        startRun(evt.runId, evt.sessionKey, t);
+                        addLine('lifecycle', '▶ 开始', null, t);
+                    } else if (payload.type === 'finish' || payload.type === 'done') {
+                        addLine('lifecycle', '✅ 完成', null, t);
+                        endRun();
+                    } else if (payload.type === 'error') {
+                        addLine('error', formatValue(payload.error || 'Unknown error'), null, t);
+                    }
+                }
+
+                else if (stream === 'tool') {
+                    const name = payload.name || payload.tool || 'tool';
+                    const args = payload.arguments || payload.args || {};
+                    if (!paused) {
+                        addLine('tool', `🔧 ${name}`, formatValue(JSON.stringify(args)), t);
+                        toolCount++;
+                        document.getElementById('tool-count').textContent = toolCount;
+                    }
+                }
+
+                else if (stream === 'assistant') {
+                    const text = payload.content || payload.text || '';
+                    if (text) {
+                        addLine('assistant', text.substring(0, 150), null, t);
+                    }
+                }
+
+                else if (stream === 'error') {
+                    addLine('error', formatValue(JSON.stringify(payload)), null, t);
+                }
+
+                else {
+                    // Other agent events
+                    addLine('agent', `${stream}: ${formatValue(JSON.stringify(payload), 100)}`, null, t);
+                }
+            }
+
+            // Session events
+            else if (data.type === 'session_reset' || data.type === 'session_delete') {
+                addLine('system', data.type, null, t);
+            }
+        }
+
+        function clearTrace() {
+            lines.forEach(l => l.remove());
+            lines = [];
+            currentRunGroup = null;
+            msgCount = runCount = toolCount = 0;
+            document.getElementById('msg-count').textContent = '0';
+            document.getElementById('run-count').textContent = '0';
+            document.getElementById('tool-count').textContent = '0';
+            flow.innerHTML = '<div class="empty">等待消息流转...</div>';
+        }
+
+        function togglePause() {
+            paused = !paused;
+            document.getElementById('pause-btn').textContent = paused ? '继续' : '暂停';
+        }
+
+        function connect() {
+            const dot = document.getElementById('dot');
+            const statusText = document.getElementById('status-text');
+
+            try {
+                ws = new WebSocket(GW_URL);
+
+                ws.onopen = () => {
+                    statusText.textContent = '已连接';
+                    dot.className = 'status-dot connected';
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const msg = JSON.parse(event.data);
+                        handleMessage(msg);
+                    } catch (e) {
+                        // Try plain text
+                        try { handleMessage({type: 'raw', data: {content: event.data}}); } catch(e2) {}
+                    }
+                };
+
+                ws.onclose = () => {
+                    statusText.textContent = '断开';
+                    dot.className = 'status-dot error';
+                    setTimeout(connect, 3000);
+                };
+
+                ws.onerror = () => {
+                    ws.close();
+                };
+            } catch (e) {
+                statusText.textContent = '连接失败';
+                dot.className = 'status-dot error';
+                setTimeout(connect, 5000);
+            }
+        }
+
+        connect();
+    </script>
+</body>
+</html>

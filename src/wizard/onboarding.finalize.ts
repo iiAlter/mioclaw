@@ -243,8 +243,8 @@ export async function finalizeOnboardingWizard(
       await prompter.note(
         [
           "Docs:",
-          "https://docs.mioclaw.ai/gateway/health",
-          "https://docs.mioclaw.ai/gateway/troubleshooting",
+          "https://docs.openclaw.ai/gateway/health",
+          "https://docs.openclaw.ai/gateway/troubleshooting",
         ].join("\n"),
         "Health check help",
       );
@@ -328,7 +328,7 @@ export async function finalizeOnboardingWizard(
         : undefined,
       `Gateway WS: ${links.wsUrl}`,
       gatewayStatusLine,
-      "Docs: https://docs.mioclaw.ai/web/control-ui",
+      "Docs: https://docs.openclaw.ai/web/control-ui",
     ]
       .filter(Boolean)
       .join("\n"),
@@ -431,13 +431,13 @@ export async function finalizeOnboardingWizard(
   await prompter.note(
     [
       "Back up your agent workspace.",
-      "Docs: https://docs.mioclaw.ai/concepts/agent-workspace",
+      "Docs: https://docs.openclaw.ai/concepts/agent-workspace",
     ].join("\n"),
     "Workspace backup",
   );
 
   await prompter.note(
-    "Running agents on your computer is risky — harden your setup: https://docs.mioclaw.ai/security",
+    "Running agents on your computer is risky — harden your setup: https://docs.openclaw.ai/security",
     "Security",
   );
 
@@ -506,7 +506,7 @@ export async function finalizeOnboardingWizard(
           "",
           `Provider: ${label}`,
           ...(keySource ? [keySource] : []),
-          "Docs: https://docs.mioclaw.ai/tools/web",
+          "Docs: https://docs.openclaw.ai/tools/web",
         ].join("\n"),
         "Web search",
       );
@@ -517,8 +517,8 @@ export async function finalizeOnboardingWizard(
           "web_search will not work until a key is added.",
           `  ${formatCliCommand("mioclaw configure --section web")}`,
           "",
-          `Get your key at: ${entry?.signupUrl ?? "https://docs.mioclaw.ai/tools/web"}`,
-          "Docs: https://docs.mioclaw.ai/tools/web",
+          `Get your key at: ${entry?.signupUrl ?? "https://docs.openclaw.ai/tools/web"}`,
+          "Docs: https://docs.openclaw.ai/tools/web",
         ].join("\n"),
         "Web search",
       );
@@ -528,7 +528,7 @@ export async function finalizeOnboardingWizard(
           `Web search (${label}) is configured but disabled.`,
           `Re-enable: ${formatCliCommand("mioclaw configure --section web")}`,
           "",
-          "Docs: https://docs.mioclaw.ai/tools/web",
+          "Docs: https://docs.openclaw.ai/tools/web",
         ].join("\n"),
         "Web search",
       );
@@ -545,7 +545,7 @@ export async function finalizeOnboardingWizard(
       await prompter.note(
         [
           `Web search is available via ${legacyDetected.label} (auto-detected).`,
-          "Docs: https://docs.mioclaw.ai/tools/web",
+          "Docs: https://docs.openclaw.ai/tools/web",
         ].join("\n"),
         "Web search",
       );
@@ -555,7 +555,7 @@ export async function finalizeOnboardingWizard(
           "Web search was skipped. You can enable it later:",
           `  ${formatCliCommand("mioclaw configure --section web")}`,
           "",
-          "Docs: https://docs.mioclaw.ai/tools/web",
+          "Docs: https://docs.openclaw.ai/tools/web",
         ].join("\n"),
         "Web search",
       );

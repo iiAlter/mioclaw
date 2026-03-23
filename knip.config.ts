@@ -1,4 +1,5 @@
 const rootEntries = [
+  "mioclaw.mjs!",
   "openclaw.mjs!",
   "src/index.ts!",
   "src/entry.ts!",

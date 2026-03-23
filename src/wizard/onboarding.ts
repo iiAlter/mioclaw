@@ -55,7 +55,7 @@ async function requireRiskAcknowledgement(params: {
       "mioclaw security audit --deep",
       "mioclaw security audit --fix",
       "",
-      "Must read: https://docs.mioclaw.ai/gateway/security",
+      "Must read: https://docs.openclaw.ai/gateway/security",
     ].join("\n"),
     "Security",
   );
@@ -90,7 +90,7 @@ export async function runOnboardingWizard(
         [
           ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
           "",
-          "Docs: https://docs.mioclaw.ai/gateway/configuration",
+          "Docs: https://docs.openclaw.ai/gateway/configuration",
         ].join("\n"),
         "Config issues",
       );

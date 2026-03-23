@@ -5,7 +5,7 @@ import type { RuntimeEnv } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { isRich, theme } from "../terminal/theme.js";
 
-const SEARCH_TOOL = "https://docs.mioclaw.ai/mcp.SearchOpenClaw";
+const SEARCH_TOOL = "https://docs.openclaw.ai/mcp.SearchOpenClaw";
 const SEARCH_TIMEOUT_MS = 30_000;
 const DEFAULT_SNIPPET_MAX = 220;
 
@@ -165,7 +165,7 @@ export async function docsSearchCommand(queryParts: string[], runtime: RuntimeEn
       runtime.log(`${theme.muted("Docs:")} ${docs}`);
       runtime.log(`${theme.muted("Search:")} ${formatCliCommand('mioclaw docs "your query"')}`);
     } else {
-      runtime.log("Docs: https://docs.mioclaw.ai/");
+      runtime.log("Docs: https://docs.openclaw.ai/");
       runtime.log(`Search: ${formatCliCommand('mioclaw docs "your query"')}`);
     }
     return;

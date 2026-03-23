@@ -1,13 +1,13 @@
-# Mioclaw — 个人 AI 助手
+# Mioclaw
 
-**Mioclaw** 是一个运行在本地设备上的个人 AI 助手，通过飞书渠道响应用户。
+**Mioclaw** 是一个本地运行的多渠道 AI gateway/agent 运行时，当前仓库作为独立项目维护。
 
 ## 功能特性
 
-- **多渠道支持**: 飞书 (Feishu)
+- **多渠道支持**: 飞书等消息入口
 - **模型支持**: MiniMax 等大语言模型
-- **本地运行**: 数据存储在本地，保护隐私
-- **TUI 界面**: 终端交互界面
+- **本地运行**: 配置、日志、记忆都保存在本机
+- **Control UI**: 内置 Web 控制台
 
 ## 快速开始
 
@@ -25,21 +25,31 @@ cd mioclaw
 # 安装依赖
 pnpm install
 
+# 本地构建
+pnpm build
+
 # 链接 CLI
 pnpm link --global
 ```
 
 ### 配置
 
-1. 复制配置文件并修改端口：
+1. 初始化配置目录：
 
 ```bash
 mkdir -p ~/.mioclaw
-cp ~/.openclaw/openclaw.json ~/.mioclaw/mioclaw.json
-# 编辑 ~/.mioclaw/mioclaw.json 将端口改为 17800
+cat > ~/.mioclaw/mioclaw.json <<'EOF'
+{
+  "gateway": {
+    "mode": "local",
+    "port": 18789
+  }
+}
+EOF
 ```
 
-2. 设置环境变量：
+2. 可选：显式指定配置文件路径。
+   当前代码里环境变量前缀仍兼容 `OPENCLAW_*`，所以这里继续使用 `OPENCLAW_CONFIG_PATH`：
 
 ```bash
 export OPENCLAW_CONFIG_PATH=~/.mioclaw/mioclaw.json
@@ -49,10 +59,10 @@ export OPENCLAW_CONFIG_PATH=~/.mioclaw/mioclaw.json
 
 ```bash
 # 启动 Gateway
-mioclaw gateway run --bind loopback --port 17800 --force
+mioclaw gateway run --bind loopback --port 18789 --force
 
 # 启动 TUI
-mioclaw tui ws://127.0.0.1:17800 -agent main -session main
+mioclaw tui ws://127.0.0.1:18789 -agent main -session main
 ```
 
 ## 配置说明
@@ -90,7 +100,7 @@ mioclaw tui ws://127.0.0.1:17800 -agent main -session main
   },
   "gateway": {
     "mode": "local",
-    "port": 17800
+    "port": 18789
   }
 }
 ```
@@ -99,7 +109,7 @@ mioclaw tui ws://127.0.0.1:17800 -agent main -session main
 
 ```bash
 # 启动 Gateway
-mioclaw gateway run --bind loopback --port 17800 --force
+mioclaw gateway run --bind loopback --port 18789 --force
 
 # 查看状态
 mioclaw status
@@ -108,7 +118,7 @@ mioclaw status
 mioclaw message send --to xxx --message "Hello"
 
 # 启动交互界面
-mioclaw tui ws://127.0.0.1:17800 -agent main -session main
+mioclaw tui ws://127.0.0.1:18789 -agent main -session main
 ```
 
 ## 目录结构
@@ -135,3 +145,4 @@ mioclaw tui ws://127.0.0.1:17800 -agent main -session main
 
 - 飞书开放平台: https://open.feishu.cn/
 - MiniMax API: https://platform.minimaxi.com/
+- GitHub: https://github.com/iiAlter/mioclaw

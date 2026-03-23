@@ -194,7 +194,7 @@ export async function setupSkills(
       runtime.log(
         `Tip: run \`${formatCliCommand("mioclaw doctor")}\` to review skills + requirements.`,
       );
-      runtime.log("Docs: https://docs.mioclaw.ai/skills");
+      runtime.log("Docs: https://docs.openclaw.ai/skills");
     }
   }
 
