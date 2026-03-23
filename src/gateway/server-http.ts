@@ -127,7 +127,7 @@ async function handleMemoryBoardRequest(
   // API routes
   if (pathname.startsWith("/api/memory")) {
     const url = new URL(req.url!, "http://localhost");
-    return await handleMemoryApi(req, res, url);
+    return await handleMemoryApi(req, res, url, loadConfig());
   }
 
   // Static files

@@ -367,10 +367,6 @@ export function handleControlUiHttpRequest(
     respondControlUiAssetsUnavailable(res, { configuredRootPath: rootState.path });
     return true;
   }
-  if (rootState?.kind === "missing") {
-    respondControlUiAssetsUnavailable(res);
-    return true;
-  }
 
   const root =
     rootState?.kind === "resolved" || rootState?.kind === "bundled"
@@ -425,9 +421,10 @@ export function handleControlUiHttpRequest(
     return true;
   }
 
+  const shouldClassifyResolvedAutoRoot = rootState === undefined || rootState?.kind === "missing";
   const isBundledRoot =
     rootState?.kind === "bundled" ||
-    (rootState === undefined &&
+    (shouldClassifyResolvedAutoRoot &&
       isPackageProvenControlUiRootSync(root, {
         moduleUrl: import.meta.url,
         argv1: process.argv[1],

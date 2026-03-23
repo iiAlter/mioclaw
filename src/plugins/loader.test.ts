@@ -1942,6 +1942,14 @@ describe("loadOpenClawPlugins", () => {
     expect(subpaths).not.toContain("root-alias");
   });
 
+  it("maps both mioclaw and openclaw plugin-sdk aliases", () => {
+    const aliasMap = __testing.buildPluginSdkAliasMap();
+    expect(aliasMap["mioclaw/plugin-sdk"]).toBeTruthy();
+    expect(aliasMap["openclaw/plugin-sdk"]).toBe(aliasMap["mioclaw/plugin-sdk"]);
+    expect(aliasMap["mioclaw/plugin-sdk/compat"]).toBeTruthy();
+    expect(aliasMap["openclaw/plugin-sdk/compat"]).toBe(aliasMap["mioclaw/plugin-sdk/compat"]);
+  });
+
   it("falls back to src plugin-sdk alias when dist is missing in production", () => {
     const { root, srcFile, distFile } = createPluginSdkAliasFixture();
     fs.rmSync(distFile);

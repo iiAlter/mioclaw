@@ -153,6 +153,8 @@ function listPluginSdkExportedSubpaths(params: { modulePath?: string } = {}): st
   }
 }
 
+const PLUGIN_SDK_ALIAS_PREFIXES = ["mioclaw/plugin-sdk", "openclaw/plugin-sdk"] as const;
+
 const resolvePluginSdkScopedAliasMap = (): Record<string, string> => {
   const aliasMap: Record<string, string> = {};
   for (const subpath of listPluginSdkExportedSubpaths()) {
@@ -161,10 +163,26 @@ const resolvePluginSdkScopedAliasMap = (): Record<string, string> => {
       distFile: `${subpath}.js`,
     });
     if (resolved) {
-      aliasMap[`mioclaw/plugin-sdk/${subpath}`] = resolved;
+      for (const prefix of PLUGIN_SDK_ALIAS_PREFIXES) {
+        aliasMap[`${prefix}/${subpath}`] = resolved;
+      }
     }
   }
   return aliasMap;
+};
+
+const buildPluginSdkAliasMap = (): Record<string, string> => {
+  const aliasMap: Record<string, string> = {};
+  const pluginSdkAlias = resolvePluginSdkAlias();
+  if (pluginSdkAlias) {
+    for (const prefix of PLUGIN_SDK_ALIAS_PREFIXES) {
+      aliasMap[prefix] = pluginSdkAlias;
+    }
+  }
+  return {
+    ...aliasMap,
+    ...resolvePluginSdkScopedAliasMap(),
+  };
 };
 
 export const __testing = {
@@ -172,6 +190,7 @@ export const __testing = {
   listPluginSdkExportedSubpaths,
   resolvePluginSdkAliasCandidateOrder,
   resolvePluginSdkAliasFile,
+  buildPluginSdkAliasMap,
   maxPluginRegistryCacheEntries: MAX_PLUGIN_REGISTRY_CACHE_ENTRIES,
 };
 
@@ -616,11 +635,7 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
     if (jitiLoader) {
       return jitiLoader;
     }
-    const pluginSdkAlias = resolvePluginSdkAlias();
-    const aliasMap = {
-      ...(pluginSdkAlias ? { "mioclaw/plugin-sdk": pluginSdkAlias } : {}),
-      ...resolvePluginSdkScopedAliasMap(),
-    };
+    const aliasMap = buildPluginSdkAliasMap();
     jitiLoader = createJiti(import.meta.url, {
       interopDefault: true,
       extensions: [".ts", ".tsx", ".mts", ".cts", ".mtsx", ".ctsx", ".js", ".mjs", ".cjs", ".json"],

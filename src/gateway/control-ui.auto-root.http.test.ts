@@ -38,6 +38,23 @@ afterEach(() => {
 });
 
 describe("handleControlUiHttpRequest auto-detected root", () => {
+  it("re-resolves auto-detected root after startup reported assets missing", async () => {
+    await withControlUiRoot(async (tmp) => {
+      resolveControlUiRootSyncMock.mockReturnValue(tmp);
+
+      const { res, end } = makeMockHttpResponse();
+      const handled = handleControlUiHttpRequest(
+        { url: "/", method: "GET" } as IncomingMessage,
+        res,
+        { root: { kind: "missing" } },
+      );
+
+      expect(handled).toBe(true);
+      expect(res.statusCode).toBe(200);
+      expect(String(end.mock.calls[0]?.[0] ?? "")).toBe("<html>fallback</html>\n");
+    });
+  });
+
   it("serves hardlinked asset files for bundled auto-detected roots", async () => {
     await withControlUiRoot(async (tmp) => {
       const assetsDir = path.join(tmp, "assets");
