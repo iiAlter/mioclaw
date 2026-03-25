@@ -267,6 +267,76 @@ describe("chat view", () => {
     expect(indicator?.textContent).toContain("Compacting context...");
   });
 
+  it("renders high context usage as a compact notice badge", () => {
+    const container = document.createElement("div");
+    render(
+      renderChat(
+        createProps({
+          sessions: {
+            ts: 0,
+            path: "",
+            count: 1,
+            defaults: { model: null, contextTokens: 200_000 },
+            sessions: [
+              {
+                key: "main",
+                kind: "direct",
+                updatedAt: null,
+                model: null,
+                inputTokens: 3_200_000,
+                totalTokens: 190_000,
+                totalTokensFresh: true,
+                contextTokens: 200_000,
+              },
+            ],
+          },
+        }),
+      ),
+      container,
+    );
+
+    const notice = container.querySelector(".context-notice");
+    const icon = container.querySelector(".context-notice__icon");
+    expect(notice).not.toBeNull();
+    expect(notice?.textContent).toContain("95% context used");
+    expect(notice?.textContent).toContain("190k / 200k");
+    expect(icon?.getAttribute("viewBox")).toBe("0 0 24 24");
+  });
+
+  it("falls back to input tokens when the total token snapshot is stale", () => {
+    const container = document.createElement("div");
+    render(
+      renderChat(
+        createProps({
+          sessions: {
+            ts: 0,
+            path: "",
+            count: 1,
+            defaults: { model: null, contextTokens: 200_000 },
+            sessions: [
+              {
+                key: "main",
+                kind: "direct",
+                updatedAt: null,
+                model: null,
+                inputTokens: 190_000,
+                totalTokens: 20_000,
+                totalTokensFresh: false,
+                contextTokens: 200_000,
+              },
+            ],
+          },
+        }),
+      ),
+      container,
+    );
+
+    const notice = container.querySelector(".context-notice");
+    expect(notice).not.toBeNull();
+    expect(notice?.textContent).toContain("95% context used");
+    expect(notice?.textContent).toContain("190k / 200k");
+  });
+
   it("renders completion indicator shortly after compaction", () => {
     const container = document.createElement("div");
     const nowSpy = vi.spyOn(Date, "now").mockReturnValue(1_000);
