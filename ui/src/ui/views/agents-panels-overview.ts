@@ -1,6 +1,10 @@
 import { html, nothing } from "lit";
 import type { AgentIdentityResult, AgentsFilesListResult, AgentsListResult } from "../types.ts";
 import {
+  getAgentWorkspaceFileMeta,
+  PRIMARY_WORKSPACE_FILE_NAMES,
+} from "./agent-workspace-files.ts";
+import {
   buildModelOptions,
   normalizeModelValue,
   parseFallbackList,
@@ -27,6 +31,7 @@ export function renderAgentOverview(params: {
   onConfigSave: () => void;
   onModelChange: (agentId: string, modelId: string | null) => void;
   onModelFallbacksChange: (agentId: string, fallbacks: string[]) => void;
+  onOpenFile: (name: string) => void;
   onSelectPanel: (panel: AgentsPanel) => void;
 }) {
   const {
@@ -40,6 +45,7 @@ export function renderAgentOverview(params: {
     onConfigSave,
     onModelChange,
     onModelFallbacksChange,
+    onOpenFile,
     onSelectPanel,
   } = params;
   const config = resolveAgentConfig(configForm, agent.id);
@@ -189,6 +195,27 @@ export function renderAgentOverview(params: {
             ${configSaving ? "Saving…" : "Save"}
           </button>
         </div>
+      </div>
+    </section>
+    <section class="card">
+      <div class="card-title">Workspace Prompts</div>
+      <div class="card-sub">
+        Open the main editable files that shape this workspace agent.
+      </div>
+      <div class="agent-workspace-shortcuts" style="margin-top: 16px;">
+        ${PRIMARY_WORKSPACE_FILE_NAMES.map((name) => {
+          const meta = getAgentWorkspaceFileMeta(name);
+          return html`
+            <button type="button" class="agent-workspace-shortcut" @click=${() => onOpenFile(name)}>
+              <div class="agent-workspace-shortcut__title">${meta.label}</div>
+              <div class="agent-workspace-shortcut__filename mono">${name}</div>
+              <div class="agent-workspace-shortcut__description">${meta.description}</div>
+            </button>
+          `;
+        })}
+      </div>
+      <div class="muted" style="margin-top: 12px;">
+        Need the full workspace file list? Open the Files tab.
       </div>
     </section>
   `;

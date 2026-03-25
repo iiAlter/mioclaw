@@ -96,6 +96,7 @@ export type AgentsProps = {
   onConfigSave: () => void;
   onModelChange: (agentId: string, modelId: string | null) => void;
   onModelFallbacksChange: (agentId: string, fallbacks: string[]) => void;
+  onOpenFile: (agentId: string, name: string) => void;
   onChannelsRefresh: () => void;
   onCronRefresh: () => void;
   onCronRunNow: (jobId: string) => void;
@@ -235,6 +236,7 @@ export function renderAgents(props: AgentsProps) {
                         onConfigSave: props.onConfigSave,
                         onModelChange: props.onModelChange,
                         onModelFallbacksChange: props.onModelFallbacksChange,
+                        onOpenFile: (name) => props.onOpenFile(selectedAgent.id, name),
                         onSelectPanel: props.onSelectPanel,
                       })
                     : nothing

@@ -17,6 +17,7 @@ import type {
   CronJob,
   CronStatus,
 } from "../types.ts";
+import { getAgentWorkspaceFileMeta, sortAgentWorkspaceFiles } from "./agent-workspace-files.ts";
 import { formatBytes, type AgentContext } from "./agents-utils.ts";
 import { resolveChannelExtras as resolveChannelExtrasFromConfig } from "./channel-config-extras.ts";
 
@@ -349,7 +350,7 @@ export function renderAgentFiles(params: {
   onFileSave: (name: string) => void;
 }) {
   const list = params.agentFilesList?.agentId === params.agentId ? params.agentFilesList : null;
-  const files = list?.files ?? [];
+  const files = list ? sortAgentWorkspaceFiles(list.files) : [];
   const active = params.agentFileActive ?? null;
   const activeEntry = active ? (files.find((file) => file.name === active) ?? null) : null;
   const baseContent = active ? (params.agentFileContents[active] ?? "") : "";
@@ -360,8 +361,10 @@ export function renderAgentFiles(params: {
     <section class="card">
       <div class="row" style="justify-content: space-between;">
         <div>
-          <div class="card-title">Core Files</div>
-          <div class="card-sub">Bootstrap persona, identity, and tool guidance.</div>
+          <div class="card-title">Workspace Files</div>
+          <div class="card-sub">
+            Review and edit SOUL, TOOLS, AGENTS, IDENTITY, HEARTBEAT, and related workspace prompts.
+          </div>
         </div>
         <button
           class="btn btn--sm"
@@ -410,7 +413,9 @@ export function renderAgentFiles(params: {
                       : html`
                           <div class="agent-file-header">
                             <div>
-                              <div class="agent-file-title mono">${activeEntry.name}</div>
+                              <div class="agent-file-title">${getAgentWorkspaceFileMeta(activeEntry.name).label}</div>
+                              <div class="agent-file-caption">${getAgentWorkspaceFileMeta(activeEntry.name).description}</div>
+                              <div class="agent-file-sub mono">${activeEntry.name}</div>
                               <div class="agent-file-sub mono">${activeEntry.path}</div>
                             </div>
                             <div class="agent-file-actions">
@@ -501,6 +506,7 @@ export function renderAgentFiles(params: {
 }
 
 function renderAgentFileRow(file: AgentFileEntry, active: string | null, onSelect: () => void) {
+  const meta = getAgentWorkspaceFileMeta(file.name);
   const status = file.missing
     ? "Missing"
     : `${formatBytes(file.size)} · ${formatRelativeTimestamp(file.updatedAtMs ?? null)}`;
@@ -511,7 +517,11 @@ function renderAgentFileRow(file: AgentFileEntry, active: string | null, onSelec
       @click=${onSelect}
     >
       <div>
-        <div class="agent-file-name mono">${file.name}</div>
+        <div class="agent-file-name-row">
+          <div class="agent-file-name">${meta.label}</div>
+          <div class="agent-file-filename mono">${file.name}</div>
+        </div>
+        <div class="agent-file-description">${meta.description}</div>
         <div class="agent-file-meta">${status}</div>
       </div>
       ${

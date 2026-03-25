@@ -992,6 +992,20 @@ export function renderApp(state: AppViewState) {
                     }
                   },
                   onLoadFiles: (agentId) => loadAgentFiles(state, agentId),
+                  onOpenFile: (agentId, name) => {
+                    state.agentsPanel = "files";
+                    state.agentFileActive = name;
+                    void (async () => {
+                      if (state.agentFilesList?.agentId !== agentId) {
+                        state.agentFilesList = null;
+                        state.agentFilesError = null;
+                        state.agentFileContents = {};
+                        state.agentFileDrafts = {};
+                        await loadAgentFiles(state, agentId);
+                      }
+                      await loadAgentFileContent(state, agentId, name);
+                    })();
+                  },
                   onSelectFile: (name) => {
                     state.agentFileActive = name;
                     if (!resolvedAgentId) {

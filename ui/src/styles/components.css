@@ -3194,6 +3194,49 @@
   gap: 8px;
 }
 
+.agent-workspace-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.agent-workspace-shortcut {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  padding: 12px;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) ease,
+    transform var(--duration-fast) ease;
+}
+
+.agent-workspace-shortcut:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.agent-workspace-shortcut__title {
+  font-weight: 600;
+}
+
+.agent-workspace-shortcut__filename,
+.agent-file-filename,
+.agent-file-caption {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.agent-workspace-shortcut__description,
+.agent-file-description {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
 .agent-file-row {
   display: flex;
   justify-content: space-between;
@@ -3220,6 +3263,13 @@
 
 .agent-file-name {
   font-weight: 600;
+}
+
+.agent-file-name-row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
 }
 
 .agent-file-meta {
@@ -3258,6 +3308,10 @@
 
 .agent-file-title {
   font-weight: 600;
+}
+
+.agent-file-caption {
+  margin-top: 4px;
 }
 
 .agent-file-sub {
