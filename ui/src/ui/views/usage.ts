@@ -788,6 +788,7 @@ export function renderUsage(props: UsageProps) {
           props.visibleColumns,
           totalSessions,
           props.onClearSessions,
+          props.onToggleColumn,
         )}
       </div>
     </div>

@@ -55,6 +55,7 @@ export const usageStylesPart3 = `
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 12px;
     margin: 8px 0 10px;
     font-size: 12px;
@@ -107,8 +108,33 @@ export const usageStylesPart3 = `
     overflow-y: auto;
     padding: 8px;
   }
+  .session-bar-header {
+    display: grid;
+    grid-template-columns: minmax(180px, 2fr) repeat(auto-fit, minmax(96px, 1fr)) 80px;
+    gap: 10px;
+    padding: 0 8px 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 1;
+  }
+  .session-bar-header__title,
+  .session-bar-header__cell,
+  .session-bar-header__value {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
   .sessions-card .session-bar-row {
-    padding: 6px 8px;
+    display: grid;
+    grid-template-columns: minmax(180px, 2fr) repeat(auto-fit, minmax(96px, 1fr)) 80px;
+    gap: 10px;
+    align-items: start;
+    padding: 8px;
     border-radius: 6px;
     margin-bottom: 3px;
     border: 1px solid transparent;
@@ -124,14 +150,34 @@ export const usageStylesPart3 = `
     box-shadow: inset 0 0 0 1px rgba(255, 77, 77, 0.15);
   }
   .sessions-card .session-bar-label {
-    flex: 1 1 auto;
-    min-width: 140px;
+    min-width: 0;
     font-size: 12px;
   }
+  .session-bar-sub {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .session-bar-cell {
+    min-width: 0;
+  }
+  .session-bar-cell__label {
+    display: none;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 4px;
+  }
+  .session-bar-cell__value {
+    font-size: 12px;
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
   .sessions-card .session-bar-value {
-    flex: 0 0 60px;
     font-size: 11px;
     font-weight: 600;
+    text-align: right;
   }
   .sessions-card .session-bar-track {
     flex: 0 0 70px;
@@ -143,6 +189,24 @@ export const usageStylesPart3 = `
   }
   .sessions-clear-btn {
     margin-left: auto;
+  }
+  .sessions-columns-select {
+    margin-left: auto;
+  }
+
+  @media (max-width: 900px) {
+    .session-bar-header {
+      display: none;
+    }
+    .sessions-card .session-bar-row {
+      grid-template-columns: 1fr;
+    }
+    .session-bar-cell__label {
+      display: block;
+    }
+    .sessions-card .session-bar-value {
+      text-align: left;
+    }
   }
   
   /* ===== EMPTY DETAIL STATE ===== */

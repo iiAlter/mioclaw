@@ -7,6 +7,7 @@ import {
   formatTokens,
   UsageInsightStats,
 } from "./usage-metrics.ts";
+import { resolvePrimaryModelUsage } from "./usage-model-usage.ts";
 import {
   UsageAggregates,
   UsageColumnId,
@@ -14,6 +15,18 @@ import {
   UsageTotals,
   CostDailyEntry,
 } from "./usageTypes.ts";
+
+const SESSION_COLUMN_LABELS: Record<UsageColumnId, string> = {
+  channel: "Channel",
+  agent: "Agent",
+  provider: "Provider",
+  model: "Model",
+  modelUsage: "Model Usage",
+  messages: "Messages",
+  tools: "Tools",
+  errors: "Errors",
+  duration: "Duration",
+};
 
 function pct(part: number, total: number): number {
   if (total === 0) {
@@ -558,6 +571,7 @@ function renderSessionsCard(
   visibleColumns: UsageColumnId[],
   totalSessions: number,
   onClearSessions: () => void,
+  onToggleColumn: (column: UsageColumnId) => void,
 ) {
   const showColumn = (id: UsageColumnId) => visibleColumns.includes(id);
   const formatSessionListLabel = (s: UsageSessionEntry): string => {
@@ -577,34 +591,55 @@ function renderSessionsCard(
     }
   };
 
-  const buildSessionMeta = (s: UsageSessionEntry): string[] => {
-    const parts: string[] = [];
+  const buildSessionColumns = (
+    s: UsageSessionEntry,
+  ): Array<{ id: UsageColumnId; value: string }> => {
+    const parts: Array<{ id: UsageColumnId; value: string }> = [];
+    const currentModelUsage = resolvePrimaryModelUsage(s);
     if (showColumn("channel") && s.channel) {
-      parts.push(`channel:${s.channel}`);
+      parts.push({ id: "channel", value: s.channel });
     }
     if (showColumn("agent") && s.agentId) {
-      parts.push(`agent:${s.agentId}`);
+      parts.push({ id: "agent", value: s.agentId });
     }
     if (showColumn("provider") && (s.modelProvider || s.providerOverride)) {
-      parts.push(`provider:${s.modelProvider ?? s.providerOverride}`);
+      parts.push({ id: "provider", value: s.modelProvider ?? s.providerOverride ?? "—" });
     }
     if (showColumn("model") && s.model) {
-      parts.push(`model:${s.model}`);
+      parts.push({ id: "model", value: s.model });
+    }
+    if (showColumn("modelUsage") && currentModelUsage) {
+      parts.push({ id: "modelUsage", value: formatTokens(currentModelUsage.totals.totalTokens) });
     }
     if (showColumn("messages") && s.usage?.messageCounts) {
-      parts.push(`msgs:${s.usage.messageCounts.total}`);
+      parts.push({ id: "messages", value: String(s.usage.messageCounts.total) });
     }
     if (showColumn("tools") && s.usage?.toolUsage) {
-      parts.push(`tools:${s.usage.toolUsage.totalCalls}`);
+      parts.push({ id: "tools", value: String(s.usage.toolUsage.totalCalls) });
     }
     if (showColumn("errors") && s.usage?.messageCounts) {
-      parts.push(`errors:${s.usage.messageCounts.errors}`);
+      parts.push({ id: "errors", value: String(s.usage.messageCounts.errors) });
     }
     if (showColumn("duration") && s.usage?.durationMs) {
-      parts.push(`dur:${formatDurationCompact(s.usage.durationMs, { spaced: true }) ?? "—"}`);
+      parts.push({
+        id: "duration",
+        value: formatDurationCompact(s.usage.durationMs, { spaced: true }) ?? "—",
+      });
     }
     return parts;
   };
+
+  const renderSessionHeader = () => html`
+    <div class="session-bar-header">
+      <div class="session-bar-header__title">Session</div>
+      ${visibleColumns.map(
+        (column) => html`
+          <div class="session-bar-header__cell">${SESSION_COLUMN_LABELS[column]}</div>
+        `,
+      )}
+      <div class="session-bar-header__value">${isTokenMode ? "Tokens" : "Cost"}</div>
+    </div>
+  `;
 
   // Helper to get session value (filtered by days if selected)
   const getSessionValue = (s: UsageSessionEntry): number => {
@@ -652,7 +687,7 @@ function renderSessionsCard(
   const renderSessionBarRow = (s: UsageSessionEntry, isSelected: boolean) => {
     const value = getSessionValue(s);
     const displayLabel = formatSessionListLabel(s);
-    const meta = buildSessionMeta(s);
+    const columns = buildSessionColumns(s);
     return html`
       <div
         class="session-bar-row ${isSelected ? "selected" : ""}"
@@ -661,8 +696,16 @@ function renderSessionsCard(
       >
         <div class="session-bar-label">
           <div class="session-bar-title">${displayLabel}</div>
-          ${meta.length > 0 ? html`<div class="session-bar-meta">${meta.join(" · ")}</div>` : nothing}
+          <div class="session-bar-sub mono">${s.key}</div>
         </div>
+        ${columns.map(
+          (column) => html`
+            <div class="session-bar-cell" data-column=${column.id}>
+              <div class="session-bar-cell__label">${SESSION_COLUMN_LABELS[column.id]}</div>
+              <div class="session-bar-cell__value">${column.value}</div>
+            </div>
+          `,
+        )}
         <div class="session-bar-track" style="display: none;"></div>
         <div class="session-bar-actions">
           <button
@@ -702,6 +745,28 @@ function renderSessionsCard(
           <span>${isTokenMode ? formatTokens(avgValue) : formatCost(avgValue)} avg</span>
           <span>${totalErrors} errors</span>
         </div>
+        <details class="usage-filter-select sessions-columns-select">
+          <summary>
+            <span>Columns</span>
+            <span class="usage-filter-badge">${visibleColumns.length}</span>
+          </summary>
+          <div class="usage-filter-popover">
+            <div class="usage-filter-options">
+              ${(Object.keys(SESSION_COLUMN_LABELS) as UsageColumnId[]).map(
+                (column) => html`
+                  <label class="usage-filter-option">
+                    <input
+                      type="checkbox"
+                      .checked=${visibleColumns.includes(column)}
+                      @change=${() => onToggleColumn(column)}
+                    />
+                    <span>${SESSION_COLUMN_LABELS[column]}</span>
+                  </label>
+                `,
+              )}
+            </div>
+          </div>
+        </details>
         <div class="chart-toggle small">
           <button
             class="toggle-btn ${sessionsTab === "all" ? "active" : ""}"
@@ -752,22 +817,28 @@ function renderSessionsCard(
                 <div class="muted" style="padding: 20px; text-align: center">No recent sessions</div>
               `
             : html`
-	                <div class="session-bars" style="max-height: 220px; margin-top: 6px;">
-	                  ${recentEntries.map((s) => renderSessionBarRow(s, selectedSet.has(s.key)))}
-	                </div>
-	              `
+                <div class="session-bars" style="max-height: 220px; margin-top: 6px;">
+                  ${renderSessionHeader()}
+                  ${recentEntries.map((s) => renderSessionBarRow(s, selectedSet.has(s.key)))}
+                </div>
+              `
           : sessions.length === 0
             ? html`
                 <div class="muted" style="padding: 20px; text-align: center">No sessions in range</div>
               `
             : html`
-	                <div class="session-bars">
-	                  ${sortedWithDir
-                      .slice(0, 50)
-                      .map((s) => renderSessionBarRow(s, selectedSet.has(s.key)))}
-	                  ${sessions.length > 50 ? html`<div class="muted" style="padding: 8px; text-align: center; font-size: 11px;">+${sessions.length - 50} more</div>` : nothing}
-	                </div>
-	              `
+                <div class="session-bars">
+                  ${renderSessionHeader()}
+                  ${sortedWithDir
+                    .slice(0, 50)
+                    .map((s) => renderSessionBarRow(s, selectedSet.has(s.key)))}
+                  ${
+                    sessions.length > 50
+                      ? html`<div class="muted" style="padding: 8px; text-align: center; font-size: 11px;">+${sessions.length - 50} more</div>`
+                      : nothing
+                  }
+                </div>
+              `
       }
       ${
         selectedCount > 1
@@ -775,6 +846,7 @@ function renderSessionsCard(
               <div style="margin-top: 10px;">
                 <div class="sessions-card-count">Selected (${selectedCount})</div>
                 <div class="session-bars" style="max-height: 160px; margin-top: 6px;">
+                  ${renderSessionHeader()}
                   ${selectedEntries.map((s) => renderSessionBarRow(s, true))}
                 </div>
               </div>

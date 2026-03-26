@@ -2,6 +2,7 @@ import { html, svg, nothing } from "lit";
 import { formatDurationCompact } from "../../../../src/infra/format-time/format-duration.ts";
 import { parseToolSummary } from "../usage-helpers.ts";
 import { charsToTokens, formatCost, formatTokens } from "./usage-metrics.ts";
+import { resolvePrimaryModelUsage } from "./usage-model-usage.ts";
 import { renderInsightList } from "./usage-render-overview.ts";
 import {
   SessionLogEntry,
@@ -116,6 +117,8 @@ function renderSessionSummary(
       value: formatCost(entry.totals.totalCost),
       sub: formatTokens(entry.totals.totalTokens),
     })) ?? [];
+  const currentModelUsage = resolvePrimaryModelUsage(session, usage);
+  const currentModelLabel = currentModelUsage?.model ?? session.model ?? "unknown";
 
   return html`
     ${badges.length > 0 ? html`<div class="usage-badges">${badges.map((b) => html`<span class="usage-badge">${b}</span>`)}</div>` : nothing}
@@ -139,6 +142,17 @@ function renderSessionSummary(
         <div class="session-summary-title">Duration</div>
         <div class="session-summary-value">${formatDurationCompact(usage.durationMs, { spaced: true }) ?? "—"}</div>
         <div class="session-summary-meta">${formatTs(usage.firstActivity)} → ${formatTs(usage.lastActivity)}</div>
+      </div>
+      <div class="session-summary-card">
+        <div class="session-summary-title">Current Model</div>
+        <div class="session-summary-value">${currentModelLabel}</div>
+        <div class="session-summary-meta">
+          ${
+            currentModelUsage
+              ? `${formatTokens(currentModelUsage.totals.totalTokens)} · ${formatCost(currentModelUsage.totals.totalCost)}`
+              : "No model usage data"
+          }
+        </div>
       </div>
     </div>
     <div class="usage-insights-grid" style="margin-top: 12px;">

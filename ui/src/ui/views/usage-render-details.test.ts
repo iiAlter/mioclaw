@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { resolvePrimaryModelUsage } from "./usage-model-usage.ts";
 import {
   computeFilteredUsage,
   CHART_BAR_WIDTH_RATIO,
@@ -132,5 +133,72 @@ describe("chart bar sizing", () => {
         expect(barGap).toBeGreaterThanOrEqual(0);
       }
     }
+  });
+});
+
+describe("resolvePrimaryModelUsage", () => {
+  const usage = {
+    ...baseUsage,
+    modelUsage: [
+      {
+        provider: "anthropic",
+        model: "claude-3.7-sonnet",
+        count: 1,
+        totals: {
+          input: 20,
+          output: 10,
+          cacheRead: 0,
+          cacheWrite: 0,
+          totalTokens: 30,
+          totalCost: 0.03,
+          inputCost: 0.02,
+          outputCost: 0.01,
+          cacheReadCost: 0,
+          cacheWriteCost: 0,
+          missingCostEntries: 0,
+        },
+      },
+      {
+        provider: "openai",
+        model: "openai/gpt-4.1",
+        count: 2,
+        totals: {
+          input: 80,
+          output: 30,
+          cacheRead: 0,
+          cacheWrite: 0,
+          totalTokens: 110,
+          totalCost: 0.09,
+          inputCost: 0.06,
+          outputCost: 0.03,
+          cacheReadCost: 0,
+          cacheWriteCost: 0,
+          missingCostEntries: 0,
+        },
+      },
+    ],
+  } satisfies NonNullable<UsageSessionEntry["usage"]>;
+
+  it("prefers the session's current model and provider", () => {
+    const session: UsageSessionEntry = {
+      key: "session-1",
+      model: "openai/gpt-4.1",
+      modelProvider: "openai",
+      usage,
+    };
+    const entry = resolvePrimaryModelUsage(session);
+    expect(entry?.model).toBe("openai/gpt-4.1");
+    expect(entry?.totals.totalTokens).toBe(110);
+  });
+
+  it("falls back to the first usage entry when the current model is unavailable", () => {
+    const session: UsageSessionEntry = {
+      key: "session-2",
+      model: "openai/gpt-5",
+      modelProvider: "openai",
+      usage,
+    };
+    const entry = resolvePrimaryModelUsage(session);
+    expect(entry?.model).toBe("claude-3.7-sonnet");
   });
 });

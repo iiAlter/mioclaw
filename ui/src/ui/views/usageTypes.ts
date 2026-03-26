@@ -16,6 +16,7 @@ export type UsageColumnId =
   | "agent"
   | "provider"
   | "model"
+  | "modelUsage"
   | "messages"
   | "tools"
   | "errors"
