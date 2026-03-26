@@ -1,5 +1,5 @@
 // swift-tools-version: 6.2
-// Package manifest for the OpenClaw macOS companion (menu bar app + IPC library).
+// Package manifest for the MioClaw macOS companion (menu bar app + IPC library).
 
 import PackageDescription
 
@@ -40,7 +40,7 @@ let package = Package(
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .executableTarget(
-            name: "OpenClaw",
+            name: "Mioclaw",
             dependencies: [
                 "OpenClawIPC",
                 "OpenClawDiscovery",
@@ -55,6 +55,7 @@ let package = Package(
                 .product(name: "PeekabooBridge", package: "Peekaboo"),
                 .product(name: "PeekabooAutomationKit", package: "Peekaboo"),
             ],
+            path: "Sources/Mioclaw",
             exclude: [
                 "Resources/Info.plist",
             ],
