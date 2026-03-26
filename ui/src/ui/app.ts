@@ -332,6 +332,7 @@ export class OpenClawApp extends LitElement {
     "agent",
     "provider",
     "model",
+    "modelUsage",
     "messages",
     "tools",
     "errors",
